@@ -169,10 +169,12 @@ THEME_COLOR = '#5670d4'
 POSTS = (
     ("posts/*.rst", "posts", "post.tmpl"),
     ("posts/*.txt", "posts", "post.tmpl"),
+    ("posts/*.org", "posts", "post.tmpl"),
 )
 PAGES = (
     ("stories/*.rst", "stories", "story.tmpl"),
     ("stories/*.txt", "stories", "story.tmpl"),
+    ("stories/*.org", "stories", "story.tmpl"),
 )
 
 
@@ -256,6 +258,7 @@ COMPILERS = {
     # but is disabled by default as it would conflict
     # with many of the others.
     # "pandoc": ('.rst', '.md', '.txt'),
+    "orgmode": ('.org',),
 }
 
 # Create by default posts in one file format?
