@@ -264,6 +264,7 @@ COMPILERS = {
 # Create by default posts in one file format?
 # Set to False for two-file posts, with separate metadata.
 # ONE_FILE_POSTS = True
+ONE_FILE_POSTS = False
 
 # If this is set to True, the DEFAULT_LANG version will be displayed for
 # untranslated posts.
