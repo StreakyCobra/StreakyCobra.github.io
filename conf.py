@@ -766,18 +766,18 @@ FEED_LINKS_APPEND_QUERY = False
 
 # A HTML fragment describing the license, for the sidebar.
 # (translatable)
-LICENSE = ""
+# LICENSE = ""
 # I recommend using the Creative Commons' wizard:
 # https://creativecommons.org/choose/
-# LICENSE = """
-# <a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
-# <img alt="Creative Commons License BY-NC-SA"
-# style="border-width:0; margin-bottom:12px;"
-# src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>"""
+LICENSE = """
+<a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License BY-NC-SA"
+style="border-width:0; margin-bottom:12px;"
+src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>"""
 
 # A small copyright notice for the page footer (in HTML).
 # (translatable)
-CONTENT_FOOTER = 'Contents &copy; {date}         <a href="mailto:{email}">{author}</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a>         {license}'
+CONTENT_FOOTER = 'Contents &copy; {date}         <a href="mailto:{email}">{author}</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a><br/>  {license}'
 
 # Things that will be passed to CONTENT_FOOTER.format().  This is done
 # for translatability, as dicts are not formattable.  Nikola will
@@ -1139,9 +1139,41 @@ UNSLUGIFY_TITLES = True
 # those.
 # TEMPLATE_FILTERS = {}
 
+BIOGRAPHY = """
+<img class="img-circle" style="float:left;margin:10px 20px 10px 0px;max-height:200px;" src="/images/StreakyCobra.png">
+<p><u>Developer, Hacker &amp; Computer Scientist</u></p>
+
+<p>I am currently employed as PhD student at the <a href="http://hevs.ch/">HES-SO Valais//Wallis</a> in Switzerland, working on Machine Learning applied to eHealth. I have created <a href="https://github.com/StreakyCobra/gws">gws</a> and I am also collaborating on <a href="https://github.com/syl20bnr/spacemacs">Spacemacs</a>. My interests are <i>Software development</i>, <i>Computer Science</i>, <i>open-source movement</i> and <i>DIY</i>.</p>
+
+<p><a href="https://github.com/syl20bnr/spacemacs"><img src="https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg" /></a></p>
+"""
+
 # Put in global_context things you want available on all your templates.
 # It can be anything, data, functions, modules, etc.
-GLOBAL_CONTEXT = {}
+GLOBAL_CONTEXT = {
+    'header_color': 'info',
+    'author_avatar': '/images/StreakyCobra.png',
+    'biography': BIOGRAPHY,
+    'use_pace': True,
+    'social_links': [
+    {
+        'bgcolor': "#F44336",
+        'icon': "<i class='fa fa-share-square'></i>"
+    },
+    {
+        "url": "https://github.com/StreakyCobra",
+        "bgcolor": "#666666",
+        "color": "#fffff",
+        "icon": "<i class='fa fa-github-square'></i>",
+    },
+    {
+        "url": "https://www.linkedin.com/in/fabiendubosson",
+        "bgcolor": "#3B5998",
+        "color": "#fffff",
+        "icon": "<i class='fa fa-linkedin-square'></i>",
+    },
+    ],
+}
 
 # Add functions here and they will be called with template
 # GLOBAL_CONTEXT as parameter when the template is about to be

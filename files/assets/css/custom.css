@@ -1,3 +1,29 @@
+@import url("highlight.css");
+
+.content-material {
+    max-width: 800px;
+}
+
+ul li {
+    list-style: disc;
+}
+
+p {
+    text-align: justify;
+}
+
+.content-material .outline-2 h2 {
+    border-bottom: solid 1px;
+}
+
+.content-material .outline-3 h3 {
+    border-bottom: dotted 1px;
+}
+
+.content-material .outline-3 {
+    padding-left: 10px;
+}
+
 .highlight .hll { background-color: #ffffcc }
 .highlight  { background: #f0f0f0; }
 .highlight .c { color: #60a0b0; font-style: italic } /* Comment */
