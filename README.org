@@ -1,0 +1,13 @@
+#+TITLE: streakycobra.github.io
+
+This repository contains the sources of my website at
+https://streakycobra.github.io/. The =sources= branch contains the code allowing
+to generate the website with [[https://getnikola.com/][Nikola]]. The generated website lies on the =master=
+branch.
+
+* License
+
+The content of this website is licensed under a [[https://creativecommons.org/licenses/by-nc-sa/4.0/][Creative Commons
+Attribution-NonCommercial-ShareAlike 4.0 International License]].
+
+[[file:./images/cc-by-nc-sa.png]]
