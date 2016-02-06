@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html prefix="
+og: http://ogp.me/ns#
+article: http://ogp.me/ns/article#
+" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blogging in org-mode with Nikola | Why doing it the simple way?</title>
+<script src="../../assets/js/pace.min.js"></script><link href="../../assets/css/pace.css" rel="stylesheet">
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="https://StreakyCobra.github.io/posts/blogging-in-org-mode-with-nikola/">
+<!--[if lt IE 9]>
+            <script src="../../assets/js/html5shiv.min.js"></script>
+            <script src="../../assets/js/respond.min.js"></script>
+        <![endif]--><meta name="author" content="Fabien Dubosson">
+<meta property="og:site_name" content="Why doing it the simple way?">
+<meta property="og:title" content="Blogging in org-mode with Nikola">
+<meta property="og:url" content="https://StreakyCobra.github.io/posts/blogging-in-org-mode-with-nikola/">
+<meta property="og:description" content="Introduction
+
+
+The last trend for blogging is to use a static site generator. This has some
+advantages over dynamic websites (wordpress) and online blog services (blogger):
+
+
+
+This is more easy to do ">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2016-02-04T14:32:11+01:00">
+<meta property="article:tag" content="emacs">
+<meta property="article:tag" content="nikola">
+<meta property="article:tag" content="org-mode">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Menubar -->
+
+<nav class="navbar navbar-info header-panel shadow-z-3" role="navigation"><div class="container-fluid">
+        <div class="row">
+          <div class="col-xs-3">
+            <h1 class="title-blog">
+                <a href="https://StreakyCobra.github.io/">
+                        <span id="blog-title">Why doing it the simple way?</span>
+                    </a>
+            </h1>
+          </div>
+        </div>
+      </div>
+<!-- /.container-fluid -->
+</nav><div class="container-fluid main" id="content" role="main">
+        <div class="row">
+            <nav class="col-xs-3 menu"><ul>
+<li class="withripple"><a href="../../archive.html">Archive</a></li>
+                <li class="withripple"><a href="../../categories/">Tags</a></li>
+                <li class="withripple"><a href="../../rss.xml">RSS feed</a></li>
+
+                    
+                </ul>
+<ul class="nav navbar-nav"></ul></nav><div class="posts-material col-xs-9">
+                <div class="col-xs-12 col-md-11 content-material">
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Blogging in org-mode with Nikola</a></h1>
+<hr>
+<div class="metadata">
+            <span class="byline author vcard">
+                <a href=".">
+                        <img class="img-circle" src="../../images/StreakyCobra.png" alt="icon">
+                    Fabien Dubosson
+                </a>
+            </span>
+            <span class="dateline">
+                <a href="." rel="bookmark"><i class="mdi-device-access-time"></i>
+                    <time class="published dt-published" datetime="2016-02-04T14:32:11+01:00" itemprop="datePublished" title="2016-02-04 14:32">2016-02-04 14:32</time></a>
+            </span>
+        </div>
+        
+        <hr></header><div class="e-content entry-content" itemprop="articleBody text">
+    <div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The last trend for blogging is to use a static site generator. This has some
+advantages over dynamic websites (wordpress) and online blog services (blogger):
+</p>
+
+<ul class="org-ul">
+<li>This is more easy to do than deploying a application server, as there is no
+special installation/configuration needed (especially if you use GitHub for
+hosting).
+</li>
+<li>This prevents attacks on the server as there are no interactions with dynamic
+parts.
+</li>
+<li>The posts and associated contents can be versioned in a git repository as it
+is using only text files, not databases.
+</li>
+<li>The content of your blog is not locked to an online blog engine, so you are
+free to move <i>easily</i> whenever you want all your content to a new system.
+</li>
+</ul>
+<p>
+Thanks to <a href="https://spacemacs.org">Spacemacs</a>, I entered the Emacs' world recently and started to enjoy
+<code>org-mode</code>. When I decided (again) to start a blog, I looked around for a static
+site generation supporting this file format. The problem of <code>org-mode</code> is that
+it is only fully supported within emacs, as most of its power come from all the
+extensions that will probably not be supported by any parser. I looked at
+different static site generators, among which only a few where supporting more
+than Markdown/RestrucuredText. My choice was directed to <a href="https://getnikola.com/">Nikola</a> which has a
+support of a lot of format thanks to <code>pandoc</code>. But I was pleasantly surprised
+when I read the description of the <a href="https://plugins.getnikola.com/#orgmode"><code>orgmode</code> plugin for Nikola</a>:
+</p>
+
+<blockquote>
+<p>
+This plugin implements an Emacs Org-mode based compiler for Nikola.
+</p>
+
+<p>
+If your emacs does not ship with org-mode (&gt;=8.x), you will have to edit the
+init.el file supplied with this plugin, and load a newer version of org-mode.
+</p>
+</blockquote>
+
+<p>
+This meant that the plugin is using the real Emacs <code>org-mode</code> to render the
+posts of the website. This finished to convinced me starting my blog using this
+engine, and to write about this experience (in <code>org-mode</code> of course) as a first
+post. You are reading it. In this article I will detail the installation
+procedure to setup a website powered by <a href="https://getnikola.com/">Nikola</a> and hosted on GitHub pages.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Setting up the system</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+This first part will describe how to set up the whole system, from GitHub pages
+to Nikola's <code>org-mode</code> support.
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1">GitHub pages</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+GitHub is offering a service called <a href="https://pages.github.com/">GitHub pages</a> that allows people to serve
+static websites through their GitHub repositories. There is the possibility to
+serve one website per repository and also to create one website linked to the
+username. Thanks to this, people can own their associate their blog with their
+GitHub's usernames. One restriction being that GitHub is only serving static
+content, i.e. <code>.html</code> pages with some <code>javascript</code> or <code>css</code>, but this should be
+far enough for running most personal blogs.
+</p>
+
+<p>
+The main user website is be accessible at <code>http(s)://&lt;username&gt;.github.io/</code>. The
+website will be served from the <code>master</code> branch of a repository that should be
+called <code>&lt;username&gt;.github.io</code>. You can have a look at <a href="https://help.github.com/articles/user-organization-and-project-pages/">the GitHub's documentation</a>
+for more details about this.
+</p>
+
+<p>
+The first step to install the blog is to go on GitHub, and create a repository
+called <code>&lt;username&gt;.github.io</code>. You can give a description if you want, but don't
+check the "Initialize this repository" checkbox, nor add a <code>.gitignore</code> or a
+license: we want the repository to be empty. Once the repository has been
+created, you can clone it on your computer with:
+</p>
+
+<div class="highlight"><pre>$ git clone git@github.com:&lt;username&gt;.github.io.git ~/blog
+</pre></div>
+
+<p>
+As the <code>master</code> branch will be used for the rendered website, let us create a
+branch called <code>sources</code> to put the… sources of your blog:
+</p>
+
+<div class="highlight"><pre>$ <span class="nb">cd</span> ~/blog
+$ git checkout -b sources
+</pre></div>
+
+<p>
+You can already add a <code>.gitignore</code> to the folder:
+</p>
+
+<div class="highlight"><pre>*.py[cod]
+__pycache__
+cache
+output
+.doit.db
+_env/
+</pre></div>
+
+<p>
+and commit it (be sure to be on the <code>sources</code> branch):
+</p>
+
+<div class="highlight"><pre>$ git add .gitignore
+$ git commit -m <span class="s2">"Add .gitignore"</span>
+</pre></div>
+
+<p>
+We should be ready to continue.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2">Installing Nikola</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+There are different ways of installing Nikola:
+</p>
+
+<ul class="org-ul">
+<li>You can install it from your package manager, if your distribution provides a
+package for it. This is the best solution if the package exists.
+</li>
+<li>You can install it globally on your computer with <code>pip</code>, but this has the
+tendency to "pollute" the filesystem, as it is not managed by the package
+manager.
+</li>
+<li>You can install it within a Python virtual environment. This is the method I
+will present you here.
+</li>
+<li>If you have your own preferred way to install it, please do so.
+</li>
+</ul>
+<p>
+I choose to use a virtual environment because Archlinux is not providing an
+official package for Nikola. There is an <code>AUR</code> package for it, but this implies
+to build several of its dependencies from <code>AUR</code> too, and I don't went to spend
+my time checking their <code>PKGBUILD</code> at each update. As I also don't like using
+<code>pip</code> (or alternative tools) to install globally on my system, I decided to use
+a virtual environment.
+</p>
+
+<p>
+The <code>pyvenv</code> virtual environment is provided directly by the <code>python</code> package on
+Archlinux, so I decided to go for it. You can of course use another virtual
+environment tool if you prefer. In order to make the installation of Nikola in a
+virtual environment the simplest as possible, I created a simple Makefile that
+will do the most of the job.
+</p>
+
+<p>
+Let us start by defining a variable for the name of the environment folder:
+</p>
+
+<div class="highlight"><pre><span class="nv">ENVIRONMENT</span> <span class="o">:=</span> _env/
+</pre></div>
+
+<p>
+I also added a default target as first one in the Makefile to select what should
+be called when no target is specified. It is a good practice from my point of
+view, as it uncouples the logic from the target ordering.
+</p>
+
+<div class="highlight"><pre><span class="nf">default</span><span class="o">:</span> <span class="n">help</span>
+</pre></div>
+
+<p>
+Then a target to create and clean the environment:
+</p>
+
+<div class="highlight"><pre><span class="nf">$(ENVIRONMENT)</span><span class="o">:</span>
+  pyvenv <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span>
+
+<span class="nf">clean</span><span class="o">:</span>
+  rm -rf <span class="s2">"</span><span class="k">$(</span>ENVIRONMENT<span class="k">)</span><span class="s2">"</span>
+</pre></div>
+
+<p>
+If you are not used to Makefiles, it can look a little bit complicated. As we
+are using a variable, the target name is replaced by its value, same for <code>$@</code>
+that is a special variable that as for value the target's name. So it translates
+to:
+</p>
+
+<div class="highlight"><pre><span class="nf">_env/</span><span class="o">:</span>
+  pyvenv <span class="s2">"_env/"</span>
+
+<span class="nf">clean</span><span class="o">:</span>
+  nikola clean
+  rm -rf <span class="s2">"_env/"</span>
+</pre></div>
+
+<p>
+In order to use a virtual environment, one as to manually source from his
+terminal the <code>$(ENVIRONMENT)/bin/activate</code> file. Once the environment has been
+activated, the user need to install Nikola. To make this simpler for the user, I
+have done a <code>setup</code> target printing all required commands:
+</p>
+
+<div class="highlight"><pre><span class="nf">setup</span><span class="o">:</span>
+  @echo <span class="s2">"make </span><span class="k">$(</span>ENVIRONMENT<span class="k">)</span><span class="s2">;"</span>
+  @echo <span class="s2">"source </span><span class="k">$(</span>ENVIRONMENT<span class="k">)</span><span class="s2">bin/activate;"</span>
+  @echo <span class="s2">"pip install --upgrade pip 'Nikola[extras]';"</span>
+</pre></div>
+
+<p>
+When this target is executed, it will only <b>print</b> this to the command line:
+</p>
+
+<pre class="example">
+make _env/;
+source _env/bin/activate;
+pip install --upgrade pip 'Nikola[extras]';
+</pre>
+
+<p>
+This contains all steps required to setup the system:
+</p>
+
+<ul class="org-ul">
+<li>Call the Makefile to create the environment
+</li>
+<li>Source the <code>activate</code> file to enable it
+</li>
+<li>Use <code>pip</code> <i>within the environment</i> to upgrade <code>pip</code> and install/upgrade Nikola
+</li>
+</ul>
+<p>
+Instead of asking the user to copy/paste this in their terminal, it is possible
+to evaluate it directly with:
+</p>
+
+<div class="highlight"><pre>$ <span class="nb">eval</span> <span class="k">$(</span>make setup<span class="k">)</span>
+</pre></div>
+
+<p>
+This will do all the work, but let us add an <code>help</code> target that explains this
+literally to the user:
+</p>
+
+<div class="highlight"><pre><span class="nf">help</span><span class="o">:</span>
+  @echo <span class="s2">"To setup Nikola environment, please use 'eval \$</span><span class="k">$(</span>make setup<span class="k">)</span><span class="s2">'."</span>
+</pre></div>
+
+<p>
+You can now initialize the environment and install Nikola with:
+</p>
+
+<div class="highlight"><pre>$ <span class="nb">eval</span> <span class="k">$(</span>make setup<span class="k">)</span>
+</pre></div>
+
+<p>
+It will takes time the first call, but later ones will be much faster. Try to
+call <code>nikola -h</code> to be sure everything was installed correctly. The resulting
+Makefile <a href="https://github.com/StreakyCobra/StreakyCobra.github.io/blob/sources/Makefile">can be found on my GitHub repository</a>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3">Site creation</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+The skeleton of the website can be created with these commands. Note you will
+have to give some information to create the site:
+</p>
+
+<div class="highlight"><pre>$ nikola init my_first_site
+<span class="c1"># Fill the asked information</span>
+$ mv my_first_site/* .
+$ rm -r my_first_site
+</pre></div>
+
+<p>
+Nikola will create the site in a sub-directory so we have to move it to our
+current directory. You will see that for now there is only empty folders and a
+<code>conf.py</code> file. It is a pretty long configuration file, but you have to go
+through it if you want to see all possibilities to customize Nikola.
+</p>
+
+<p>
+You can now commit the <code>Makefile</code> and the <code>conf.py</code> files in the <code>sources</code>
+branch (if not already done):
+</p>
+
+<div class="highlight"><pre>$ git add Makefile conf.py
+$ git commit -m <span class="s2">"Add Makefile and conf.py"</span>
+</pre></div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4">org-mode support</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Here comes the interesting parts: making Nikola play with org-mode! There is an
+"official" <a href="https://plugins.getnikola.com/#orgmode">Nikola's plugin</a> for this, so is quite simple to install:
+</p>
+
+<div class="highlight"><pre>$ nikola plugin -i orgmode
+</pre></div>
+
+<p>
+The prerequisite being to have Emacs installed with <code>org-mode &gt; 8.x</code>.
+</p>
+
+<p>
+You will also have to edit the <code>conf.py</code> file so that Nikola will recognize the
+<code>org</code> files. For this, edit the file and add the following lines:
+</p>
+
+<div class="highlight"><pre><span class="c1"># Add the orgmode compiler to your COMPILERS dict.</span>
+<span class="n">COMPILERS</span><span class="p">[</span><span class="s2">"orgmode"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'.org'</span><span class="p">,)</span>
+
+<span class="c1"># Add org files to your POSTS, PAGES</span>
+<span class="n">POSTS</span> <span class="o">=</span> <span class="n">POSTS</span> <span class="o">+</span> <span class="p">((</span><span class="s2">"posts/*.org"</span><span class="p">,</span> <span class="s2">"posts"</span><span class="p">,</span> <span class="s2">"post.tmpl"</span><span class="p">),)</span>
+<span class="n">PAGES</span> <span class="o">=</span> <span class="n">PAGES</span> <span class="o">+</span> <span class="p">((</span><span class="s2">"stories/*.org"</span><span class="p">,</span> <span class="s2">"stories"</span><span class="p">,</span> <span class="s2">"story.tmpl"</span><span class="p">),)</span>
+</pre></div>
+
+<p>
+You can commit the added files:
+</p>
+
+<div class="highlight"><pre>$ git add plugins/orgmode conf.py
+$ git commit -m <span class="s2">"Add org-mode support"</span>
+</pre></div>
+</div>
+</div>
+
+
+<div id="outline-container-sec-2-5" class="outline-3">
+<h3 id="sec-2-5">Testing the system</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+Everything should be set up now. In order to test it, you can use the following commands:
+</p>
+
+<div class="highlight"><pre>$ nikola build
+$ nikola serve
+</pre></div>
+
+<p>
+And open your browser at <a href="http://localhost:8000">http://localhost:8000</a>. If you have a web page, it is
+working, congratulations. The server can be stopped by pressing <code>C-c</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Blogging</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Now that the system is set up correctly, let's start blogging.
+</p>
+</div>
+
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1">Writing posts</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+To write a new post, simply use the following command:
+</p>
+
+<div class="highlight"><pre>$ nikola new_post -e -f orgmode
+</pre></div>
+
+<p>
+The <code>-e</code> flag tell Nikola to open the file directly for editing, and the <code>-f
+orgmode</code> tell it to use the <code>org-mode</code> format. Then simply save the file and
+close your editor when this has been done.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2">Building the website</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+As we already saw previously, the site can be built and tested with the
+following commands:
+</p>
+
+<div class="highlight"><pre>$ nikola build
+$ nikola serve
+</pre></div>
+
+<p>
+The <code>build</code> command create the static content of the site, and the <code>serve</code>
+command run a development server to see what it looks like locally. This can be
+done whenever you want to see the changes. Note there is also this command that
+can be used advantageously as it will detect changes and rebuild the site
+automatically:
+</p>
+
+<div class="highlight"><pre>$ nikola auto
+</pre></div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3">Deploying on GitHub</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+In order to deploy on GitHub easily, only one simple step has to be done: edit
+the <code>conf.py</code> file and change these variables as in this snippet:
+</p>
+
+<div class="highlight"><pre><span class="n">GITHUB_SOURCE_BRANCH</span> <span class="o">=</span> <span class="s1">'sources'</span>
+<span class="n">GITHUB_DEPLOY_BRANCH</span> <span class="o">=</span> <span class="s1">'master'</span>
+</pre></div>
+
+<p>
+It is all. Now you can deploy your website on GitHub by simply calling:
+</p>
+
+<div class="highlight"><pre>$ nikola github_deploy
+</pre></div>
+
+<p>
+Go to your <code>http(s)://&lt;username&gt;.github.io/</code>, your website should be there :-)
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">Extras</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1">Separate metadata from posts</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+It is possible to extract the metadata out of the posts files. For this simply
+change this variable in the <code>conf.py</code> file:
+</p>
+
+<div class="highlight"><pre><span class="n">ONE_FILE_POSTS</span> <span class="o">=</span> <span class="bp">False</span>
+</pre></div>
+</div>
+</div>
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2">Themes</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+The theme of the website can be changed easily. Nikola provides some
+<a href="https://themes.getnikola.com/">predefined themes</a> that you can easily use. For this use the following command:
+</p>
+
+<div class="highlight"><pre>$ nikola install_theme &lt;theme_name&gt;
+</pre></div>
+
+<p>
+And change the following variable in the `conf.py` file:
+</p>
+
+<div class="highlight"><pre><span class="n">THEME</span> <span class="o">=</span> <span class="s2">"&lt;theme_name&gt;"</span>
+</pre></div>
+
+<p>
+Some theme requires more configurations, read the information provided on their
+pages.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3">Code syntax coloration with org-mode</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+The <code>pygmentize</code> tool is needed in order to have syntactic coloration with
+<code>org-mode</code>. It should have been installed within the virtual environment
+already, so no step <i>should</i> be needed.
+</p>
+
+<p>
+You need to generate a custom <code>css</code> file in order to make the coloration being
+displayed on the <code>html</code> page. For this run the following commands:
+</p>
+
+<div class="highlight"><pre>$ mkdir -p files/assets/css/
+$ pygmentize -S friendly -a .highlight -f html &gt;&gt; files/assets/css/custom.css
+</pre></div>
+
+<p>
+Then rebuild the website: the source codes should be highlighted now!
+</p>
+
+<div class="highlight"><pre>$ nikola build
+$ nikola serve
+</pre></div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">Conclusion</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+It was a really interesting work to setup this project. <a href="https://getnikola.com/">Nikola</a> is a simple and
+nice static site generator, and it is plugin for working with <code>org-mode</code> is the
+better that I have seen.
+</p>
+
+<p>
+I should mention that I have not tested the <code>org-mode</code> really far, so there may
+be some surprises. For now the only problem that I have seen is the inner links:
+I did not find a way to make it work for inserting a table of contents. Also,
+including images work, but for an unknown reason I have to set links to one
+level above, i.e. <code>../../images/logo.png</code> instead of <code>../images/logo.png</code>. All
+this are relatively minor problems, and having a tool offering <code>org-mode</code>,
+Markdown, RestructuredText, and many other format is a nice to have.
+</p>
+
+<ul class="org-ul">
+<li>Website sources: <a href="https://github.com/StreakyCobra/StreakyCobra.github.io">GitHub</a>
+</li>
+</ul>
+</div>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><div itemprop="keywords" class="tags">
+            <a class="tag p-category btn btn-success btn-raised btn-sm" href="../../categories/emacs/" rel="tag">emacs</a>
+            <a class="tag p-category btn btn-success btn-raised btn-sm" href="../../categories/nikola/" rel="tag">nikola</a>
+            <a class="tag p-category btn btn-success btn-raised btn-sm" href="../../categories/org-mode/" rel="tag">org-mode</a>
+        </div>
+
+    
+    </nav></aside></article>
+</div>
+            </div>
+        </div>
+        <button class="btn btn-fab btn-raised btn-material-green btn-footer" data-toggle="modal" data-target="#footer-dialog">
+            <i class="mdi-communication-message"></i>
+        </button>
+        <div id="footer-dialog" class="modal fade" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Fabien Dubosson</h4>
+                <div>
+                    
+<img class="img-circle" style="float:left;margin:10px 20px 10px 0px;max-height:200px;" src="../../images/StreakyCobra.png"><p><u>Developer, Hacker &amp; Computer Scientist</u></p>
+
+<p>I am currently employed as PhD student at the <a href="http://hevs.ch/">HES-SO Valais//Wallis</a> in Switzerland, working on Machine Learning applied to eHealth. I have created <a href="https://github.com/StreakyCobra/gws">gws</a> and I am also collaborating on <a href="https://github.com/syl20bnr/spacemacs">Spacemacs</a>. My interests are <i>Software development</i>, <i>Computer Science</i>, <i>open-source movement</i> and <i>DIY</i>.</p>
+
+<p><a href="https://github.com/syl20bnr/spacemacs"><img src="https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg"></a></p>
+
+                </div>
+                <hr>
+</div>
+              <div class="modal-body">
+                    Contents © 2016         <a href="mailto:fabien.dubosson@gmail.com">Fabien Dubosson</a> - Powered by         <a href="https://getnikola.com" rel="nofollow">Nikola</a><br><a rel="license" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">
+<img alt="Creative Commons License BY-NC-SA" style="border-width:0; margin-bottom:12px;" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"></a>
+                    
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-primary" data-dismiss="modal">Ok</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="source-button">
+    <a class="btn btn-fab btn-raised btn-material-indigo" target="_blank" href="index.org" title="Source">
+        <i class="mdi-file-cloud-download"></i>
+    </a>
+
+        </div>
+        <div class="kc_fab_wrapper"></div>
+</div>
+
+            <script src="../../assets/js/all-nocdn.js"></script><script>
+                var links = [
+                        {
+                            "icon": "<i class='fa fa-share-square'></i>",    
+                            "bgcolor": "#F44336",    
+                        },
+                        {
+                            "icon": "<i class='fa fa-github-square'></i>",    
+                            "bgcolor": "#666666",    
+                            "color": "#fffff",    
+                            "url": "https://github.com/StreakyCobra",    
+                        },
+                        {
+                            "icon": "<i class='fa fa-linkedin-square'></i>",    
+                            "bgcolor": "#3B5998",    
+                            "color": "#fffff",    
+                            "url": "https://www.linkedin.com/in/fabiendubosson",    
+                        },
+                ];
+
+            $(document).ready(function() {
+                // This command is used to initialize some elements and make them work properly
+                $.material.init();
+                    $('.kc_fab_wrapper').kc_fab(links);
+            });
+
+            $(window).on("resize", function() {
+                $("html, body").height($(window).height());
+                $(".main, .menu").height($(window).height() - $(".header-panel").outerHeight() - 76 ); // footer margin: $("footer.footer").outerHeight()
+                $(".posts-material").height($(window).height());
+            }).trigger("resize");
+        </script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates -->
+</body>
+</html>

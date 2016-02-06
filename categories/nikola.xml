@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Why doing it the simple way? (nikola)</title><link>https://StreakyCobra.github.io/</link><description></description><atom:link type="application/rss+xml" href="https://StreakyCobra.github.io/categories/nikola.xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sat, 06 Feb 2016 14:45:39 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Blogging in org-mode with Nikola</title><link>https://StreakyCobra.github.io/posts/blogging-in-org-mode-with-nikola/</link><dc:creator>Fabien Dubosson</dc:creator><description>&lt;div id="outline-container-sec-1" class="outline-2"&gt;
+&lt;h2 id="sec-1"&gt;Introduction&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-1"&gt;
+&lt;p&gt;
+The last trend for blogging is to use a static site generator. This has some
+advantages over dynamic websites (wordpress) and online blog services (blogger):
+&lt;/p&gt;
+
+&lt;ul class="org-ul"&gt;
+&lt;li&gt;This is more easy to do than deploying a application server, as there is no
+special installation/configuration needed (especially if you use GitHub for
+hosting).
+&lt;/li&gt;
+&lt;li&gt;This prevents attacks on the server as there are no interactions with dynamic
+parts.
+&lt;/li&gt;
+&lt;li&gt;The posts and associated contents can be versioned in a git repository as it
+is using only text files, not databases.
+&lt;/li&gt;
+&lt;li&gt;The content of your blog is not locked to an online blog engine, so you are
+free to move &lt;i&gt;easily&lt;/i&gt; whenever you want all your content to a new system.
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;
+Thanks to &lt;a href="https://spacemacs.org"&gt;Spacemacs&lt;/a&gt;, I entered the Emacs' world recently and started to enjoy
+&lt;code&gt;org-mode&lt;/code&gt;. When I decided (again) to start a blog, I looked around for a static
+site generation supporting this file format. The problem of &lt;code&gt;org-mode&lt;/code&gt; is that
+it is only fully supported within emacs, as most of its power come from all the
+extensions that will probably not be supported by any parser. I looked at
+different static site generators, among which only a few where supporting more
+than Markdown/RestrucuredText. My choice was directed to &lt;a href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; which has a
+support of a lot of format thanks to &lt;code&gt;pandoc&lt;/code&gt;. But I was pleasantly surprised
+when I read the description of the &lt;a href="https://plugins.getnikola.com/#orgmode"&gt;&lt;code&gt;orgmode&lt;/code&gt; plugin for Nikola&lt;/a&gt;:
+&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;
+This plugin implements an Emacs Org-mode based compiler for Nikola.
+&lt;/p&gt;
+
+&lt;p&gt;
+If your emacs does not ship with org-mode (&amp;gt;=8.x), you will have to edit the
+init.el file supplied with this plugin, and load a newer version of org-mode.
+&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;
+This meant that the plugin is using the real Emacs &lt;code&gt;org-mode&lt;/code&gt; to render the
+posts of the website. This finished to convinced me starting my blog using this
+engine, and to write about this experience (in &lt;code&gt;org-mode&lt;/code&gt; of course) as a first
+post. You are reading it. In this article I will detail the installation
+procedure to setup a website powered by &lt;a href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; and hosted on GitHub pages.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-2" class="outline-2"&gt;
+&lt;h2 id="sec-2"&gt;Setting up the system&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-2"&gt;
+&lt;p&gt;
+This first part will describe how to set up the whole system, from GitHub pages
+to Nikola's &lt;code&gt;org-mode&lt;/code&gt; support.
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-2-1" class="outline-3"&gt;
+&lt;h3 id="sec-2-1"&gt;GitHub pages&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-2-1"&gt;
+&lt;p&gt;
+GitHub is offering a service called &lt;a href="https://pages.github.com/"&gt;GitHub pages&lt;/a&gt; that allows people to serve
+static websites through their GitHub repositories. There is the possibility to
+serve one website per repository and also to create one website linked to the
+username. Thanks to this, people can own their associate their blog with their
+GitHub's usernames. One restriction being that GitHub is only serving static
+content, i.e. &lt;code&gt;.html&lt;/code&gt; pages with some &lt;code&gt;javascript&lt;/code&gt; or &lt;code&gt;css&lt;/code&gt;, but this should be
+far enough for running most personal blogs.
+&lt;/p&gt;
+
+&lt;p&gt;
+The main user website is be accessible at &lt;code&gt;http(s)://&amp;lt;username&amp;gt;.github.io/&lt;/code&gt;. The
+website will be served from the &lt;code&gt;master&lt;/code&gt; branch of a repository that should be
+called &lt;code&gt;&amp;lt;username&amp;gt;.github.io&lt;/code&gt;. You can have a look at &lt;a href="https://help.github.com/articles/user-organization-and-project-pages/"&gt;the GitHub's documentation&lt;/a&gt;
+for more details about this.
+&lt;/p&gt;
+
+&lt;p&gt;
+The first step to install the blog is to go on GitHub, and create a repository
+called &lt;code&gt;&amp;lt;username&amp;gt;.github.io&lt;/code&gt;. You can give a description if you want, but don't
+check the "Initialize this repository" checkbox, nor add a &lt;code&gt;.gitignore&lt;/code&gt; or a
+license: we want the repository to be empty. Once the repository has been
+created, you can clone it on your computer with:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ git clone git@github.com:&amp;lt;username&amp;gt;.github.io.git ~/blog
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+As the &lt;code&gt;master&lt;/code&gt; branch will be used for the rendered website, let us create a
+branch called &lt;code&gt;sources&lt;/code&gt; to put the… sources of your blog:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ~/blog
+$ git checkout -b sources
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+You can already add a &lt;code&gt;.gitignore&lt;/code&gt; to the folder:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;*.py[cod]
+__pycache__
+cache
+output
+.doit.db
+_env/
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+and commit it (be sure to be on the &lt;code&gt;sources&lt;/code&gt; branch):
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ git add .gitignore
+$ git commit -m &lt;span class="s2"&gt;"Add .gitignore"&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+We should be ready to continue.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-2-2" class="outline-3"&gt;
+&lt;h3 id="sec-2-2"&gt;Installing Nikola&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-2-2"&gt;
+&lt;p&gt;
+There are different ways of installing Nikola:
+&lt;/p&gt;
+
+&lt;ul class="org-ul"&gt;
+&lt;li&gt;You can install it from your package manager, if your distribution provides a
+package for it. This is the best solution if the package exists.
+&lt;/li&gt;
+&lt;li&gt;You can install it globally on your computer with &lt;code&gt;pip&lt;/code&gt;, but this has the
+tendency to "pollute" the filesystem, as it is not managed by the package
+manager.
+&lt;/li&gt;
+&lt;li&gt;You can install it within a Python virtual environment. This is the method I
+will present you here.
+&lt;/li&gt;
+&lt;li&gt;If you have your own preferred way to install it, please do so.
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;
+I choose to use a virtual environment because Archlinux is not providing an
+official package for Nikola. There is an &lt;code&gt;AUR&lt;/code&gt; package for it, but this implies
+to build several of its dependencies from &lt;code&gt;AUR&lt;/code&gt; too, and I don't went to spend
+my time checking their &lt;code&gt;PKGBUILD&lt;/code&gt; at each update. As I also don't like using
+&lt;code&gt;pip&lt;/code&gt; (or alternative tools) to install globally on my system, I decided to use
+a virtual environment.
+&lt;/p&gt;
+
+&lt;p&gt;
+The &lt;code&gt;pyvenv&lt;/code&gt; virtual environment is provided directly by the &lt;code&gt;python&lt;/code&gt; package on
+Archlinux, so I decided to go for it. You can of course use another virtual
+environment tool if you prefer. In order to make the installation of Nikola in a
+virtual environment the simplest as possible, I created a simple Makefile that
+will do the most of the job.
+&lt;/p&gt;
+
+&lt;p&gt;
+Let us start by defining a variable for the name of the environment folder:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;ENVIRONMENT&lt;/span&gt; &lt;span class="o"&gt;:=&lt;/span&gt; _env/
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+I also added a default target as first one in the Makefile to select what should
+be called when no target is specified. It is a good practice from my point of
+view, as it uncouples the logic from the target ordering.
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;default&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="n"&gt;help&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+Then a target to create and clean the environment:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;$(ENVIRONMENT)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  pyvenv &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;
+
+&lt;span class="nf"&gt;clean&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  rm -rf &lt;span class="s2"&gt;"&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;ENVIRONMENT&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;"&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+If you are not used to Makefiles, it can look a little bit complicated. As we
+are using a variable, the target name is replaced by its value, same for &lt;code&gt;$@&lt;/code&gt;
+that is a special variable that as for value the target's name. So it translates
+to:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;_env/&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  pyvenv &lt;span class="s2"&gt;"_env/"&lt;/span&gt;
+
+&lt;span class="nf"&gt;clean&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  nikola clean
+  rm -rf &lt;span class="s2"&gt;"_env/"&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+In order to use a virtual environment, one as to manually source from his
+terminal the &lt;code&gt;$(ENVIRONMENT)/bin/activate&lt;/code&gt; file. Once the environment has been
+activated, the user need to install Nikola. To make this simpler for the user, I
+have done a &lt;code&gt;setup&lt;/code&gt; target printing all required commands:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;setup&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  @echo &lt;span class="s2"&gt;"make &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;ENVIRONMENT&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;;"&lt;/span&gt;
+  @echo &lt;span class="s2"&gt;"source &lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;ENVIRONMENT&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;bin/activate;"&lt;/span&gt;
+  @echo &lt;span class="s2"&gt;"pip install --upgrade pip 'Nikola[extras]';"&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+When this target is executed, it will only &lt;b&gt;print&lt;/b&gt; this to the command line:
+&lt;/p&gt;
+
+&lt;pre class="example"&gt;
+make _env/;
+source _env/bin/activate;
+pip install --upgrade pip 'Nikola[extras]';
+&lt;/pre&gt;
+
+&lt;p&gt;
+This contains all steps required to setup the system:
+&lt;/p&gt;
+
+&lt;ul class="org-ul"&gt;
+&lt;li&gt;Call the Makefile to create the environment
+&lt;/li&gt;
+&lt;li&gt;Source the &lt;code&gt;activate&lt;/code&gt; file to enable it
+&lt;/li&gt;
+&lt;li&gt;Use &lt;code&gt;pip&lt;/code&gt; &lt;i&gt;within the environment&lt;/i&gt; to upgrade &lt;code&gt;pip&lt;/code&gt; and install/upgrade Nikola
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;
+Instead of asking the user to copy/paste this in their terminal, it is possible
+to evaluate it directly with:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ &lt;span class="nb"&gt;eval&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;make setup&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+This will do all the work, but let us add an &lt;code&gt;help&lt;/code&gt; target that explains this
+literally to the user:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nf"&gt;help&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  @echo &lt;span class="s2"&gt;"To setup Nikola environment, please use 'eval \$&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;make setup&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;'."&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+You can now initialize the environment and install Nikola with:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ &lt;span class="nb"&gt;eval&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;make setup&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+It will takes time the first call, but later ones will be much faster. Try to
+call &lt;code&gt;nikola -h&lt;/code&gt; to be sure everything was installed correctly. The resulting
+Makefile &lt;a href="https://github.com/StreakyCobra/StreakyCobra.github.io/blob/sources/Makefile"&gt;can be found on my GitHub repository&lt;/a&gt;.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-2-3" class="outline-3"&gt;
+&lt;h3 id="sec-2-3"&gt;Site creation&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-2-3"&gt;
+&lt;p&gt;
+The skeleton of the website can be created with these commands. Note you will
+have to give some information to create the site:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ nikola init my_first_site
+&lt;span class="c1"&gt;# Fill the asked information&lt;/span&gt;
+$ mv my_first_site/* .
+$ rm -r my_first_site
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+Nikola will create the site in a sub-directory so we have to move it to our
+current directory. You will see that for now there is only empty folders and a
+&lt;code&gt;conf.py&lt;/code&gt; file. It is a pretty long configuration file, but you have to go
+through it if you want to see all possibilities to customize Nikola.
+&lt;/p&gt;
+
+&lt;p&gt;
+You can now commit the &lt;code&gt;Makefile&lt;/code&gt; and the &lt;code&gt;conf.py&lt;/code&gt; files in the &lt;code&gt;sources&lt;/code&gt;
+branch (if not already done):
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ git add Makefile conf.py
+$ git commit -m &lt;span class="s2"&gt;"Add Makefile and conf.py"&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-2-4" class="outline-3"&gt;
+&lt;h3 id="sec-2-4"&gt;org-mode support&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-2-4"&gt;
+&lt;p&gt;
+Here comes the interesting parts: making Nikola play with org-mode! There is an
+"official" &lt;a href="https://plugins.getnikola.com/#orgmode"&gt;Nikola's plugin&lt;/a&gt; for this, so is quite simple to install:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ nikola plugin -i orgmode
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+The prerequisite being to have Emacs installed with &lt;code&gt;org-mode &amp;gt; 8.x&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+You will also have to edit the &lt;code&gt;conf.py&lt;/code&gt; file so that Nikola will recognize the
+&lt;code&gt;org&lt;/code&gt; files. For this, edit the file and add the following lines:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;# Add the orgmode compiler to your COMPILERS dict.&lt;/span&gt;
+&lt;span class="n"&gt;COMPILERS&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;"orgmode"&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;'.org'&lt;/span&gt;&lt;span class="p"&gt;,)&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Add org files to your POSTS, PAGES&lt;/span&gt;
+&lt;span class="n"&gt;POSTS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;POSTS&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s2"&gt;"posts/*.org"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"posts"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"post.tmpl"&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt;
+&lt;span class="n"&gt;PAGES&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;PAGES&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="s2"&gt;"stories/*.org"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"stories"&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;"story.tmpl"&lt;/span&gt;&lt;span class="p"&gt;),)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+You can commit the added files:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ git add plugins/orgmode conf.py
+$ git commit -m &lt;span class="s2"&gt;"Add org-mode support"&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;div id="outline-container-sec-2-5" class="outline-3"&gt;
+&lt;h3 id="sec-2-5"&gt;Testing the system&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-2-5"&gt;
+&lt;p&gt;
+Everything should be set up now. In order to test it, you can use the following commands:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ nikola build
+$ nikola serve
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+And open your browser at &lt;a href="http://localhost:8000"&gt;http://localhost:8000&lt;/a&gt;. If you have a web page, it is
+working, congratulations. The server can be stopped by pressing &lt;code&gt;C-c&lt;/code&gt;.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-3" class="outline-2"&gt;
+&lt;h2 id="sec-3"&gt;Blogging&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-3"&gt;
+&lt;p&gt;
+Now that the system is set up correctly, let's start blogging.
+&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-3-1" class="outline-3"&gt;
+&lt;h3 id="sec-3-1"&gt;Writing posts&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-3-1"&gt;
+&lt;p&gt;
+To write a new post, simply use the following command:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ nikola new_post -e -f orgmode
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+The &lt;code&gt;-e&lt;/code&gt; flag tell Nikola to open the file directly for editing, and the &lt;code&gt;-f
+orgmode&lt;/code&gt; tell it to use the &lt;code&gt;org-mode&lt;/code&gt; format. Then simply save the file and
+close your editor when this has been done.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-3-2" class="outline-3"&gt;
+&lt;h3 id="sec-3-2"&gt;Building the website&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-3-2"&gt;
+&lt;p&gt;
+As we already saw previously, the site can be built and tested with the
+following commands:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ nikola build
+$ nikola serve
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+The &lt;code&gt;build&lt;/code&gt; command create the static content of the site, and the &lt;code&gt;serve&lt;/code&gt;
+command run a development server to see what it looks like locally. This can be
+done whenever you want to see the changes. Note there is also this command that
+can be used advantageously as it will detect changes and rebuild the site
+automatically:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ nikola auto
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-3-3" class="outline-3"&gt;
+&lt;h3 id="sec-3-3"&gt;Deploying on GitHub&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-3-3"&gt;
+&lt;p&gt;
+In order to deploy on GitHub easily, only one simple step has to be done: edit
+the &lt;code&gt;conf.py&lt;/code&gt; file and change these variables as in this snippet:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;GITHUB_SOURCE_BRANCH&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'sources'&lt;/span&gt;
+&lt;span class="n"&gt;GITHUB_DEPLOY_BRANCH&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;'master'&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+It is all. Now you can deploy your website on GitHub by simply calling:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ nikola github_deploy
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+Go to your &lt;code&gt;http(s)://&amp;lt;username&amp;gt;.github.io/&lt;/code&gt;, your website should be there :-)
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-4" class="outline-2"&gt;
+&lt;h2 id="sec-4"&gt;Extras&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-4"&gt;
+&lt;/div&gt;&lt;div id="outline-container-sec-4-1" class="outline-3"&gt;
+&lt;h3 id="sec-4-1"&gt;Separate metadata from posts&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-4-1"&gt;
+&lt;p&gt;
+It is possible to extract the metadata out of the posts files. For this simply
+change this variable in the &lt;code&gt;conf.py&lt;/code&gt; file:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ONE_FILE_POSTS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-4-2" class="outline-3"&gt;
+&lt;h3 id="sec-4-2"&gt;Themes&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-4-2"&gt;
+&lt;p&gt;
+The theme of the website can be changed easily. Nikola provides some
+&lt;a href="https://themes.getnikola.com/"&gt;predefined themes&lt;/a&gt; that you can easily use. For this use the following command:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ nikola install_theme &amp;lt;theme_name&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+And change the following variable in the `conf.py` file:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;THEME&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;"&amp;lt;theme_name&amp;gt;"&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+Some theme requires more configurations, read the information provided on their
+pages.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-4-3" class="outline-3"&gt;
+&lt;h3 id="sec-4-3"&gt;Code syntax coloration with org-mode&lt;/h3&gt;
+&lt;div class="outline-text-3" id="text-4-3"&gt;
+&lt;p&gt;
+The &lt;code&gt;pygmentize&lt;/code&gt; tool is needed in order to have syntactic coloration with
+&lt;code&gt;org-mode&lt;/code&gt;. It should have been installed within the virtual environment
+already, so no step &lt;i&gt;should&lt;/i&gt; be needed.
+&lt;/p&gt;
+
+&lt;p&gt;
+You need to generate a custom &lt;code&gt;css&lt;/code&gt; file in order to make the coloration being
+displayed on the &lt;code&gt;html&lt;/code&gt; page. For this run the following commands:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ mkdir -p files/assets/css/
+$ pygmentize -S friendly -a .highlight -f html &amp;gt;&amp;gt; files/assets/css/custom.css
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+Then rebuild the website: the source codes should be highlighted now!
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ nikola build
+$ nikola serve
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-5" class="outline-2"&gt;
+&lt;h2 id="sec-5"&gt;Conclusion&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-5"&gt;
+&lt;p&gt;
+It was a really interesting work to setup this project. &lt;a href="https://getnikola.com/"&gt;Nikola&lt;/a&gt; is a simple and
+nice static site generator, and it is plugin for working with &lt;code&gt;org-mode&lt;/code&gt; is the
+better that I have seen.
+&lt;/p&gt;
+
+&lt;p&gt;
+I should mention that I have not tested the &lt;code&gt;org-mode&lt;/code&gt; really far, so there may
+be some surprises. For now the only problem that I have seen is the inner links:
+I did not find a way to make it work for inserting a table of contents. Also,
+including images work, but for an unknown reason I have to set links to one
+level above, i.e. &lt;code&gt;../../images/logo.png&lt;/code&gt; instead of &lt;code&gt;../images/logo.png&lt;/code&gt;. All
+this are relatively minor problems, and having a tool offering &lt;code&gt;org-mode&lt;/code&gt;,
+Markdown, RestructuredText, and many other format is a nice to have.
+&lt;/p&gt;
+
+&lt;ul class="org-ul"&gt;
+&lt;li&gt;Website sources: &lt;a href="https://github.com/StreakyCobra/StreakyCobra.github.io"&gt;GitHub&lt;/a&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description><category>emacs</category><category>nikola</category><category>org-mode</category><guid>https://StreakyCobra.github.io/posts/blogging-in-org-mode-with-nikola/</guid><pubDate>Thu, 04 Feb 2016 13:32:11 GMT</pubDate></item></channel></rss>

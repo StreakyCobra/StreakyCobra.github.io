@@ -1,0 +1,386 @@
+#+TITLE: Blogging in org-mode with Nikola
+
+* Introduction
+The last trend for blogging is to use a static site generator. This has some
+advantages over dynamic websites (wordpress) and online blog services (blogger):
+
+- This is more easy to do than deploying a application server, as there is no
+  special installation/configuration needed (especially if you use GitHub for
+  hosting).
+- This prevents attacks on the server as there are no interactions with dynamic
+  parts.
+- The posts and associated contents can be versioned in a git repository as it
+  is using only text files, not databases.
+- The content of your blog is not locked to an online blog engine, so you are
+  free to move /easily/ whenever you want all your content to a new system.
+
+Thanks to [[https://spacemacs.org][Spacemacs]], I entered the Emacs' world recently and started to enjoy
+=org-mode=. When I decided (again) to start a blog, I looked around for a static
+site generation supporting this file format. The problem of =org-mode= is that
+it is only fully supported within emacs, as most of its power come from all the
+extensions that will probably not be supported by any parser. I looked at
+different static site generators, among which only a few where supporting more
+than Markdown/RestrucuredText. My choice was directed to [[https://getnikola.com/][Nikola]] which has a
+support of a lot of format thanks to =pandoc=. But I was pleasantly surprised
+when I read the description of the [[https://plugins.getnikola.com/#orgmode][=orgmode= plugin for Nikola]]:
+
+#+BEGIN_QUOTE
+This plugin implements an Emacs Org-mode based compiler for Nikola.
+
+If your emacs does not ship with org-mode (>=8.x), you will have to edit the
+init.el file supplied with this plugin, and load a newer version of org-mode.
+#+END_QUOTE
+
+This meant that the plugin is using the real Emacs =org-mode= to render the
+posts of the website. This finished to convinced me starting my blog using this
+engine, and to write about this experience (in =org-mode= of course) as a first
+post. You are reading it. In this article I will detail the installation
+procedure to setup a website powered by [[https://getnikola.com/][Nikola]] and hosted on GitHub pages.
+
+* Setting up the system
+This first part will describe how to set up the whole system, from GitHub pages
+to Nikola's =org-mode= support.
+
+** GitHub pages
+GitHub is offering a service called [[https://pages.github.com/][GitHub pages]] that allows people to serve
+static websites through their GitHub repositories. There is the possibility to
+serve one website per repository and also to create one website linked to the
+username. Thanks to this, people can own their associate their blog with their
+GitHub's usernames. One restriction being that GitHub is only serving static
+content, i.e. =.html= pages with some =javascript= or =css=, but this should be
+far enough for running most personal blogs.
+
+The main user website is be accessible at =http(s)://<username>.github.io/=. The
+website will be served from the =master= branch of a repository that should be
+called =<username>.github.io=. You can have a look at [[https://help.github.com/articles/user-organization-and-project-pages/][the GitHub's documentation]]
+for more details about this.
+
+The first step to install the blog is to go on GitHub, and create a repository
+called =<username>.github.io=. You can give a description if you want, but don't
+check the "Initialize this repository" checkbox, nor add a =.gitignore= or a
+license: we want the repository to be empty. Once the repository has been
+created, you can clone it on your computer with:
+
+#+BEGIN_SRC sh
+$ git clone git@github.com:<username>.github.io.git ~/blog
+#+END_SRC
+
+As the =master= branch will be used for the rendered website, let us create a
+branch called =sources= to put the… sources of your blog:
+
+#+BEGIN_SRC sh
+$ cd ~/blog
+$ git checkout -b sources
+#+END_SRC
+
+You can already add a =.gitignore= to the folder:
+
+#+BEGIN_SRC gitignore :tangle .gitignore
+*.py[cod]
+__pycache__
+cache
+output
+.doit.db
+_env/
+#+END_SRC
+
+and commit it (be sure to be on the =sources= branch):
+
+#+BEGIN_SRC sh
+$ git add .gitignore
+$ git commit -m "Add .gitignore"
+#+END_SRC
+
+We should be ready to continue.
+
+** Installing Nikola
+
+There are different ways of installing Nikola:
+
+- You can install it from your package manager, if your distribution provides a
+  package for it. This is the best solution if the package exists.
+- You can install it globally on your computer with =pip=, but this has the
+  tendency to "pollute" the filesystem, as it is not managed by the package
+  manager.
+- You can install it within a Python virtual environment. This is the method I
+  will present you here.
+- If you have your own preferred way to install it, please do so.
+
+I choose to use a virtual environment because Archlinux is not providing an
+official package for Nikola. There is an =AUR= package for it, but this implies
+to build several of its dependencies from =AUR= too, and I don't went to spend
+my time checking their =PKGBUILD= at each update. As I also don't like using
+=pip= (or alternative tools) to install globally on my system, I decided to use
+a virtual environment.
+
+The =pyvenv= virtual environment is provided directly by the =python= package on
+Archlinux, so I decided to go for it. You can of course use another virtual
+environment tool if you prefer. In order to make the installation of Nikola in a
+virtual environment the simplest as possible, I created a simple Makefile that
+will do the most of the job.
+
+Let us start by defining a variable for the name of the environment folder:
+
+#+BEGIN_SRC makefile :tangle Makefile
+ENVIRONMENT := _env/
+#+END_SRC
+
+I also added a default target as first one in the Makefile to select what should
+be called when no target is specified. It is a good practice from my point of
+view, as it uncouples the logic from the target ordering.
+
+#+BEGIN_SRC makefile :tangle Makefile
+default: help
+#+END_SRC
+
+Then a target to create and clean the environment:
+
+#+BEGIN_SRC makefile :tangle Makefile
+$(ENVIRONMENT):
+  pyvenv "$@"
+
+clean:
+  rm -rf "$(ENVIRONMENT)"
+#+END_SRC
+
+If you are not used to Makefiles, it can look a little bit complicated. As we
+are using a variable, the target name is replaced by its value, same for =$@=
+that is a special variable that as for value the target's name. So it translates
+to:
+
+#+BEGIN_SRC makefile :tangle no
+_env/:
+  pyvenv "_env/"
+
+clean:
+  nikola clean
+  rm -rf "_env/"
+#+END_SRC
+
+In order to use a virtual environment, one as to manually source from his
+terminal the =$(ENVIRONMENT)/bin/activate= file. Once the environment has been
+activated, the user need to install Nikola. To make this simpler for the user, I
+have done a =setup= target printing all required commands:
+
+#+BEGIN_SRC makefile :tangle Makefile
+setup:
+  @echo "make $(ENVIRONMENT);"
+  @echo "source $(ENVIRONMENT)bin/activate;"
+  @echo "pip install --upgrade pip 'Nikola[extras]';"
+#+END_SRC
+
+When this target is executed, it will only *print* this to the command line:
+
+#+BEGIN_EXAMPLE
+make _env/;
+source _env/bin/activate;
+pip install --upgrade pip 'Nikola[extras]';
+#+END_EXAMPLE
+
+This contains all steps required to setup the system:
+
+- Call the Makefile to create the environment
+- Source the =activate= file to enable it
+- Use =pip= /within the environment/ to upgrade =pip= and install/upgrade Nikola
+
+Instead of asking the user to copy/paste this in their terminal, it is possible
+to evaluate it directly with:
+
+#+BEGIN_SRC sh
+$ eval $(make setup)
+#+END_SRC
+
+This will do all the work, but let us add an =help= target that explains this
+literally to the user:
+
+#+BEGIN_SRC makefile :tangle Makefile
+help:
+  @echo "To setup Nikola environment, please use 'eval \$$(make setup)'."
+#+END_SRC
+
+You can now initialize the environment and install Nikola with:
+
+#+BEGIN_SRC sh
+$ eval $(make setup)
+#+END_SRC
+
+It will takes time the first call, but later ones will be much faster. Try to
+call =nikola -h= to be sure everything was installed correctly. The resulting
+Makefile [[https://github.com/StreakyCobra/StreakyCobra.github.io/blob/sources/Makefile][can be found on my GitHub repository]].
+
+** Site creation
+The skeleton of the website can be created with these commands. Note you will
+have to give some information to create the site:
+
+#+BEGIN_SRC sh
+$ nikola init my_first_site
+# Fill the asked information
+$ mv my_first_site/* .
+$ rm -r my_first_site
+#+END_SRC
+
+Nikola will create the site in a sub-directory so we have to move it to our
+current directory. You will see that for now there is only empty folders and a
+=conf.py= file. It is a pretty long configuration file, but you have to go
+through it if you want to see all possibilities to customize Nikola.
+
+You can now commit the =Makefile= and the =conf.py= files in the =sources=
+branch (if not already done):
+
+#+BEGIN_SRC sh
+$ git add Makefile conf.py
+$ git commit -m "Add Makefile and conf.py"
+#+END_SRC
+
+** org-mode support
+Here comes the interesting parts: making Nikola play with org-mode! There is an
+"official" [[https://plugins.getnikola.com/#orgmode][Nikola's plugin]] for this, so is quite simple to install:
+
+#+BEGIN_SRC sh
+$ nikola plugin -i orgmode
+#+END_SRC
+
+The prerequisite being to have Emacs installed with =org-mode > 8.x=.
+
+You will also have to edit the =conf.py= file so that Nikola will recognize the
+=org= files. For this, edit the file and add the following lines:
+
+#+BEGIN_SRC python
+# Add the orgmode compiler to your COMPILERS dict.
+COMPILERS["orgmode"] = ('.org',)
+
+# Add org files to your POSTS, PAGES
+POSTS = POSTS + (("posts/*.org", "posts", "post.tmpl"),)
+PAGES = PAGES + (("stories/*.org", "stories", "story.tmpl"),)
+#+END_SRC
+
+You can commit the added files:
+
+#+BEGIN_SRC sh
+$ git add plugins/orgmode conf.py
+$ git commit -m "Add org-mode support"
+#+END_SRC
+
+
+** Testing the system
+Everything should be set up now. In order to test it, you can use the following commands:
+
+#+BEGIN_SRC sh
+$ nikola build
+$ nikola serve
+#+END_SRC
+
+And open your browser at [[http://localhost:8000]]. If you have a web page, it is
+working, congratulations. The server can be stopped by pressing ~C-c~.
+
+* Blogging
+Now that the system is set up correctly, let's start blogging.
+
+** Writing posts
+To write a new post, simply use the following command:
+
+#+BEGIN_SRC sh
+$ nikola new_post -e -f orgmode
+#+END_SRC
+
+The =-e= flag tell Nikola to open the file directly for editing, and the =-f
+orgmode= tell it to use the =org-mode= format. Then simply save the file and
+close your editor when this has been done.
+
+** Building the website
+As we already saw previously, the site can be built and tested with the
+following commands:
+
+#+BEGIN_SRC sh
+$ nikola build
+$ nikola serve
+#+END_SRC
+
+The =build= command create the static content of the site, and the =serve=
+command run a development server to see what it looks like locally. This can be
+done whenever you want to see the changes. Note there is also this command that
+can be used advantageously as it will detect changes and rebuild the site
+automatically:
+
+#+BEGIN_SRC sh
+$ nikola auto
+#+END_SRC
+
+** Deploying on GitHub
+In order to deploy on GitHub easily, only one simple step has to be done: edit
+the =conf.py= file and change these variables as in this snippet:
+
+#+BEGIN_SRC python
+GITHUB_SOURCE_BRANCH = 'sources'
+GITHUB_DEPLOY_BRANCH = 'master'
+#+END_SRC
+
+It is all. Now you can deploy your website on GitHub by simply calling:
+
+#+BEGIN_SRC sh
+$ nikola github_deploy
+#+END_SRC
+
+Go to your =http(s)://<username>.github.io/=, your website should be there :-)
+
+* Extras
+
+** Separate metadata from posts
+It is possible to extract the metadata out of the posts files. For this simply
+change this variable in the =conf.py= file:
+
+#+BEGIN_SRC python
+ONE_FILE_POSTS = False
+#+END_SRC
+
+** Themes
+The theme of the website can be changed easily. Nikola provides some
+[[https://themes.getnikola.com/][predefined themes]] that you can easily use. For this use the following command:
+
+#+BEGIN_SRC sh
+$ nikola install_theme <theme_name>
+#+END_SRC
+
+And change the following variable in the `conf.py` file:
+
+#+BEGIN_SRC python
+THEME = "<theme_name>"
+#+END_SRC
+
+Some theme requires more configurations, read the information provided on their
+pages.
+
+** Code syntax coloration with org-mode
+The =pygmentize= tool is needed in order to have syntactic coloration with
+=org-mode=. It should have been installed within the virtual environment
+already, so no step /should/ be needed.
+
+You need to generate a custom =css= file in order to make the coloration being
+displayed on the =html= page. For this run the following commands:
+
+#+BEGIN_SRC sh
+$ mkdir -p files/assets/css/
+$ pygmentize -S friendly -a .highlight -f html >> files/assets/css/custom.css
+#+END_SRC
+
+Then rebuild the website: the source codes should be highlighted now!
+
+#+BEGIN_SRC sh
+$ nikola build
+$ nikola serve
+#+END_SRC
+
+* Conclusion
+It was a really interesting work to setup this project. [[https://getnikola.com/][Nikola]] is a simple and
+nice static site generator, and it is plugin for working with =org-mode= is the
+better that I have seen.
+
+I should mention that I have not tested the =org-mode= really far, so there may
+be some surprises. For now the only problem that I have seen is the inner links:
+I did not find a way to make it work for inserting a table of contents. Also,
+including images work, but for an unknown reason I have to set links to one
+level above, i.e. =../../images/logo.png= instead of =../images/logo.png=. All
+this are relatively minor problems, and having a tool offering =org-mode=,
+Markdown, RestructuredText, and many other format is a nice to have.
+
+- Website sources: [[https://github.com/StreakyCobra/StreakyCobra.github.io][GitHub]]

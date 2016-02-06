@@ -1,0 +1,4 @@
+Sitemap: https://StreakyCobra.github.io/sitemapindex.xml
+
+User-Agent: *
+Host: StreakyCobra.github.io
