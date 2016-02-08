@@ -1,5 +1,176 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Why doing it the simple way?</title><link>https://StreakyCobra.github.io/</link><description>StreakyCobra's blog</description><atom:link type="application/rss+xml" href="https://StreakyCobra.github.io/rss.xml" rel="self"></atom:link><language>en</language><lastBuildDate>Sat, 06 Feb 2016 14:45:39 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Blogging in org-mode with Nikola</title><link>https://StreakyCobra.github.io/posts/blogging-in-org-mode-with-nikola/</link><dc:creator>Fabien Dubosson</dc:creator><description>&lt;div id="outline-container-sec-1" class="outline-2"&gt;
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Why doing it the simple way?</title><link>https://StreakyCobra.github.io/</link><description>StreakyCobra's blog</description><atom:link href="https://StreakyCobra.github.io/rss.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 08 Feb 2016 12:49:54 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>SAAS or Spacemacs as a service</title><link>https://StreakyCobra.github.io/posts/saas-or-spacemacs-as-a-service/</link><dc:creator>Fabien Dubosson</dc:creator><description>&lt;div id="outline-container-sec-1" class="outline-2"&gt;
+&lt;h2 id="sec-1"&gt;Introduction&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-1"&gt;
+&lt;p&gt;
+For people who don't know what &lt;a href="https://github.com/syl20bnr/spacemacs"&gt;Spacemacs&lt;/a&gt; is, it is an Emacs configuration that
+is meant to be be &lt;i&gt;Discoverable&lt;/i&gt;, &lt;i&gt;Consistent&lt;/i&gt;, &lt;i&gt;Crowd-configured&lt;/i&gt; and with an
+emphasis on &lt;i&gt;Mnemonic&lt;/i&gt;. It supports vim's bindings out of the box (thanks to
+&lt;a href="https://bitbucket.org/lyro/evil/wiki/Home"&gt;evil&lt;/a&gt;) and provides &lt;a href="http://spacemacs.org/layers/LAYERS.html"&gt;tons of functionalities&lt;/a&gt; through a module configuration
+system. If you haven't tested it yet, you may give it a try, even &lt;a href="https://github.com/syl20bnr/spacemacs/blob/develop/doc/FAQ.org#try-spacemacs-without-modifying-my-existing-emacs-configuration"&gt;if you already
+have an emacs&lt;/a&gt; configuration. This post is oriented towards Spacemacs, but should
+be easily adapted to any Emacs version.
+&lt;/p&gt;
+
+&lt;p&gt;
+In Spacemacs, despite the packages being lazy loaded, reading the configurations
+and setting everything up can take some time. For instance right now on my
+(quite decent) computer:
+&lt;/p&gt;
+
+&lt;pre class="example"&gt;
+[425 packages loaded in 4.756s]
+&lt;/pre&gt;
+
+&lt;p&gt;
+It takes nearly 5 seconds to start. This is not too bad taking into
+consideration the number of packages, but this is still annoying while working.
+There are two schools to address this problem:
+&lt;/p&gt;
+
+&lt;ul class="org-ul"&gt;
+&lt;li&gt;Run one emacs instance, do everything in it and never close it.
+&lt;/li&gt;
+&lt;li&gt;Run a daemon in the background, and open client frames when needed.
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;
+I'm not really fond of having always an emacs instance that should never be
+closed. I'm still used to the vim's way of working with files, i.e. opening a
+new editor whenever I need to do something different. The second approach then fits
+well my workflow.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-2" class="outline-2"&gt;
+&lt;h2 id="sec-2"&gt;Running as a daemon&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-2"&gt;
+&lt;p&gt;
+The Emacs daemon can simply be started with &lt;code&gt;emacs --daemon&lt;/code&gt;. This will setup
+Emacs, and when done the daemon will be forked into a background process. To
+open client frames on this daemon there is an &lt;code&gt;emacsclient&lt;/code&gt; executable taking
+some arguments, like &lt;code&gt;-c&lt;/code&gt; to ask it to create a new GUI frame. Note that &lt;code&gt;-t&lt;/code&gt;
+may be used to create a new frame within a terminal.
+&lt;/p&gt;
+
+&lt;p&gt;
+You can test running emacs as a daemon right away with these commands:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ emacs --daemon
+$ emacsclient -c
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+This should open instantaneously an Emacs frame. You can then close the newly
+created &lt;i&gt;frame&lt;/i&gt; by pressing &lt;code&gt;SPC q z&lt;/code&gt;. You can also try to open several frames
+in parallel by running several more time &lt;code&gt;emacsclient -c&lt;/code&gt;. It is possible to
+kill the &lt;i&gt;server&lt;/i&gt; by pressing &lt;code&gt;SPC q q&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+All the Emacs runtime is shared between clients as they are on the same Emacs
+instance. This mean you can access any &lt;i&gt;buffer&lt;/i&gt; or &lt;i&gt;layout&lt;/i&gt; from any client. You
+can try this by opening a file in a first client, then pressing &lt;code&gt;SPC b b&lt;/code&gt; in a
+second: you will see the buffer opened on the first client.
+&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-3" class="outline-2"&gt;
+&lt;h2 id="sec-3"&gt;Using a service&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-3"&gt;
+&lt;p&gt;
+Starting the daemon is a repetitive and boring task that can be automated at
+boot/login time. In Linux distributions using it, &lt;code&gt;systemd&lt;/code&gt; can be used to setup
+user services. User services are conceptually the same as system services, the
+only difference is that they are at the user level and thus placed on the home
+folder. This characteristic allows to easily add user services to some
+version-control tool and share the configuration among several machines. The
+format of user services is the same as system services. On Archlinux, user
+service should be placed in &lt;code&gt;~/.local/share/systemd/user/&lt;/code&gt; and ends with
+&lt;code&gt;.service&lt;/code&gt;.
+&lt;/p&gt;
+
+&lt;p&gt;
+For running emacs as a daemon, the service file is pretty simple:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;[Unit]
+Description=Emacs: the extensible, self-documenting text editor
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/emacs --daemon
+ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+Restart=always
+Environment="DISPLAY=:0" "SSH_AUTH_SOCK=/home/fabien/.gnupg/S.gpg-agent.ssh"
+
+[Install]
+WantedBy=default.target
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+This can be placed in &lt;code&gt;~/.local/share/systemd/user/emacs.service&lt;/code&gt;. It can be
+enabled at user login time with:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ systemctl --user &lt;span class="nb"&gt;enable&lt;/span&gt; emacs
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+And it can be started right away with:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ systemctl --user start emacs
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+Stopping it and disabling it from user login time is as easy as:
+&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;$ systemctl --user stop emacs
+$ systemctl --user disable emacs
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;
+&lt;i&gt;Note:&lt;/i&gt; For an unknown reason this is not working right away on my computer:
+&lt;/p&gt;
+
+&lt;pre class="example"&gt;
+Failed to connect to bus: No such file or directory
+&lt;/pre&gt;
+
+&lt;p&gt;
+I solved this by adding &lt;code&gt;XDG_RUNTIME_DIR=/run/user/$UID&lt;/code&gt; in front of commands,
+using an alias to make it simpler:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;$ &lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="nv"&gt;scu&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"XDG_RUNTIME_DIR=/run/user/&lt;/span&gt;$&lt;span class="s2"&gt;UID systemctl --user"&lt;/span&gt;
+$ scu &lt;span class="nb"&gt;enable&lt;/span&gt; emacs
+$ scu start emacs
+$ scu stop emacs
+$ scu disable emacs
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div id="outline-container-sec-4" class="outline-2"&gt;
+&lt;h2 id="sec-4"&gt;Extra: using WIN + s to start new clients in i3&lt;/h2&gt;
+&lt;div class="outline-text-2" id="text-4"&gt;
+&lt;p&gt;
+If like me you are using the &lt;code&gt;i3&lt;/code&gt; window manager, you can bind &lt;code&gt;emacsclient -c&lt;/code&gt;
+to a key in order to start Spacemacs even more quickly in all situations,
+without having to start a terminal first to enter the command. For instance you
+can bind it to &lt;code&gt;WIN + s&lt;/code&gt; by adding the following line in your &lt;code&gt;~/.i3/config&lt;/code&gt;
+file:
+&lt;/p&gt;
+
+&lt;div class="highlight"&gt;&lt;pre&gt;bindsym $win+e exec "emacsclient -c"
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description><category>emacs</category><category>spacemacs</category><guid>https://StreakyCobra.github.io/posts/saas-or-spacemacs-as-a-service/</guid><pubDate>Mon, 08 Feb 2016 11:11:53 GMT</pubDate></item><item><title>Blogging in org-mode with Nikola</title><link>https://StreakyCobra.github.io/posts/blogging-in-org-mode-with-nikola/</link><dc:creator>Fabien Dubosson</dc:creator><description>&lt;div id="outline-container-sec-1" class="outline-2"&gt;
 &lt;h2 id="sec-1"&gt;Introduction&lt;/h2&gt;
 &lt;div class="outline-text-2" id="text-1"&gt;
 &lt;p&gt;

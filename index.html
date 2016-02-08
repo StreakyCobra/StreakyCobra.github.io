@@ -15,7 +15,7 @@ article: http://ogp.me/ns/article#
 <!--[if lt IE 9]>
             <script src="assets/js/html5shiv.min.js"></script>
             <script src="assets/js/respond.min.js"></script>
-        <![endif]--><link rel="prefetch" href="posts/blogging-in-org-mode-with-nikola/" type="text/html">
+        <![endif]--><link rel="prefetch" href="posts/saas-or-spacemacs-as-a-service/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -47,7 +47,189 @@ article: http://ogp.me/ns/article#
                 <div class="col-xs-12 col-md-11 content-material">
 
     <div class="postindex well post-material ">
-        <article class="h-entry post-text"><header><h1 class="p-name entry-title header"><a href="posts/blogging-in-org-mode-with-nikola/" class="u-url">Blogging in org-mode with Nikola</a></h1>
+        <article class="h-entry post-text"><header><h1 class="p-name entry-title header"><a href="posts/saas-or-spacemacs-as-a-service/" class="u-url">SAAS or Spacemacs as a service</a></h1>
+            <div class="metadata">
+                <span class="byline author vcard">
+                        <img class="img-circle" src="images/StreakyCobra.png" alt="icon">
+                    Fabien Dubosson
+                </span>
+                <span class="dateline"><a href="posts/saas-or-spacemacs-as-a-service/" rel="bookmark">
+                    <i class="mdi-device-access-time"></i><time class="published dt-published" datetime="2016-02-08T12:11:53+01:00" title="2016-02-08 12:11">2016-02-08 12:11</time></a></span>
+            </div>
+            <hr></header><div class="e-content entry-content">
+        <div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+For people who don't know what <a href="https://github.com/syl20bnr/spacemacs">Spacemacs</a> is, it is an Emacs configuration that
+is meant to be be <i>Discoverable</i>, <i>Consistent</i>, <i>Crowd-configured</i> and with an
+emphasis on <i>Mnemonic</i>. It supports vim's bindings out of the box (thanks to
+<a href="https://bitbucket.org/lyro/evil/wiki/Home">evil</a>) and provides <a href="http://spacemacs.org/layers/LAYERS.html">tons of functionalities</a> through a module configuration
+system. If you haven't tested it yet, you may give it a try, even <a href="https://github.com/syl20bnr/spacemacs/blob/develop/doc/FAQ.org#try-spacemacs-without-modifying-my-existing-emacs-configuration">if you already
+have an emacs</a> configuration. This post is oriented towards Spacemacs, but should
+be easily adapted to any Emacs version.
+</p>
+
+<p>
+In Spacemacs, despite the packages being lazy loaded, reading the configurations
+and setting everything up can take some time. For instance right now on my
+(quite decent) computer:
+</p>
+
+<pre class="example">
+[425 packages loaded in 4.756s]
+</pre>
+
+<p>
+It takes nearly 5 seconds to start. This is not too bad taking into
+consideration the number of packages, but this is still annoying while working.
+There are two schools to address this problem:
+</p>
+
+<ul class="org-ul">
+<li>Run one emacs instance, do everything in it and never close it.
+</li>
+<li>Run a daemon in the background, and open client frames when needed.
+</li>
+</ul>
+<p>
+I'm not really fond of having always an emacs instance that should never be
+closed. I'm still used to the vim's way of working with files, i.e. opening a
+new editor whenever I need to do something different. The second approach then fits
+well my workflow.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">Running as a daemon</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The Emacs daemon can simply be started with <code>emacs --daemon</code>. This will setup
+Emacs, and when done the daemon will be forked into a background process. To
+open client frames on this daemon there is an <code>emacsclient</code> executable taking
+some arguments, like <code>-c</code> to ask it to create a new GUI frame. Note that <code>-t</code>
+may be used to create a new frame within a terminal.
+</p>
+
+<p>
+You can test running emacs as a daemon right away with these commands:
+</p>
+
+<div class="highlight"><pre>$ emacs --daemon
+$ emacsclient -c
+</pre></div>
+
+<p>
+This should open instantaneously an Emacs frame. You can then close the newly
+created <i>frame</i> by pressing <code>SPC q z</code>. You can also try to open several frames
+in parallel by running several more time <code>emacsclient -c</code>. It is possible to
+kill the <i>server</i> by pressing <code>SPC q q</code>.
+</p>
+
+<p>
+All the Emacs runtime is shared between clients as they are on the same Emacs
+instance. This mean you can access any <i>buffer</i> or <i>layout</i> from any client. You
+can try this by opening a file in a first client, then pressing <code>SPC b b</code> in a
+second: you will see the buffer opened on the first client.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">Using a service</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Starting the daemon is a repetitive and boring task that can be automated at
+boot/login time. In Linux distributions using it, <code>systemd</code> can be used to setup
+user services. User services are conceptually the same as system services, the
+only difference is that they are at the user level and thus placed on the home
+folder. This characteristic allows to easily add user services to some
+version-control tool and share the configuration among several machines. The
+format of user services is the same as system services. On Archlinux, user
+service should be placed in <code>~/.local/share/systemd/user/</code> and ends with
+<code>.service</code>.
+</p>
+
+<p>
+For running emacs as a daemon, the service file is pretty simple:
+</p>
+
+<div class="highlight"><pre>[Unit]
+Description=Emacs: the extensible, self-documenting text editor
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/emacs --daemon
+ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+Restart=always
+Environment="DISPLAY=:0" "SSH_AUTH_SOCK=/home/fabien/.gnupg/S.gpg-agent.ssh"
+
+[Install]
+WantedBy=default.target
+</pre></div>
+
+<p>
+This can be placed in <code>~/.local/share/systemd/user/emacs.service</code>. It can be
+enabled at user login time with:
+</p>
+
+<div class="highlight"><pre>$ systemctl --user <span class="nb">enable</span> emacs
+</pre></div>
+
+<p>
+And it can be started right away with:
+</p>
+
+<div class="highlight"><pre>$ systemctl --user start emacs
+</pre></div>
+
+<p>
+Stopping it and disabling it from user login time is as easy as:
+</p>
+<div class="highlight"><pre>$ systemctl --user stop emacs
+$ systemctl --user disable emacs
+</pre></div>
+
+<p>
+<i>Note:</i> For an unknown reason this is not working right away on my computer:
+</p>
+
+<pre class="example">
+Failed to connect to bus: No such file or directory
+</pre>
+
+<p>
+I solved this by adding <code>XDG_RUNTIME_DIR=/run/user/$UID</code> in front of commands,
+using an alias to make it simpler:
+</p>
+
+<div class="highlight"><pre>$ <span class="nb">alias</span> <span class="nv">scu</span><span class="o">=</span><span class="s2">"XDG_RUNTIME_DIR=/run/user/</span>$<span class="s2">UID systemctl --user"</span>
+$ scu <span class="nb">enable</span> emacs
+$ scu start emacs
+$ scu stop emacs
+$ scu disable emacs
+</pre></div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">Extra: using WIN + s to start new clients in i3</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+If like me you are using the <code>i3</code> window manager, you can bind <code>emacsclient -c</code>
+to a key in order to start Spacemacs even more quickly in all situations,
+without having to start a terminal first to enter the command. For instance you
+can bind it to <code>WIN + s</code> by adding the following line in your <code>~/.i3/config</code>
+file:
+</p>
+
+<div class="highlight"><pre>bindsym $win+e exec "emacsclient -c"
+</pre></div>
+</div>
+</div>
+        </div>
+        </article><article class="h-entry post-text"><header><h1 class="p-name entry-title header"><a href="posts/blogging-in-org-mode-with-nikola/" class="u-url">Blogging in org-mode with Nikola</a></h1>
             <div class="metadata">
                 <span class="byline author vcard">
                         <img class="img-circle" src="images/StreakyCobra.png" alt="icon">
@@ -651,15 +833,15 @@ Markdown, RestructuredText, and many other format is a nice to have.
                         },
                         {
                             "icon": "<i class='fa fa-github-square'></i>",    
-                            "bgcolor": "#666666",    
-                            "color": "#fffff",    
                             "url": "https://github.com/StreakyCobra",    
+                            "color": "#fffff",    
+                            "bgcolor": "#666666",    
                         },
                         {
                             "icon": "<i class='fa fa-linkedin-square'></i>",    
-                            "bgcolor": "#3B5998",    
-                            "color": "#fffff",    
                             "url": "https://www.linkedin.com/in/fabiendubosson",    
+                            "color": "#fffff",    
+                            "bgcolor": "#3B5998",    
                         },
                 ];
 

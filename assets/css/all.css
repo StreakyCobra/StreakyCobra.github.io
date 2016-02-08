@@ -9296,6 +9296,10 @@ div.admonition {
     max-width: 800px;
 }
 
+.entry-content {
+    padding-bottom: 5em;
+}
+
 ul li {
     list-style: disc;
 }
