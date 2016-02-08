@@ -1,0 +1,131 @@
+#+TITLE: SAAS or Spacemacs as a service
+
+* Introduction
+For people who don't know what [[https://github.com/syl20bnr/spacemacs][Spacemacs]] is, it is an Emacs configuration that
+is meant to be be /Discoverable/, /Consistent/, /Crowd-configured/ and with an
+emphasis on /Mnemonic/. It supports vim's bindings out of the box (thanks to
+[[https://bitbucket.org/lyro/evil/wiki/Home][evil]]) and provides [[http://spacemacs.org/layers/LAYERS.html][tons of functionalities]] through a module configuration
+system. If you haven't tested it yet, you may give it a try, even [[https://github.com/syl20bnr/spacemacs/blob/develop/doc/FAQ.org#try-spacemacs-without-modifying-my-existing-emacs-configuration][if you already
+have an emacs]] configuration. This post is oriented towards Spacemacs, but should
+be easily adapted to any Emacs version.
+
+In Spacemacs, despite the packages being lazy loaded, reading the configurations
+and setting everything up can take some time. For instance right now on my
+(quite decent) computer:
+
+#+BEGIN_EXAMPLE
+[425 packages loaded in 4.756s]
+#+END_EXAMPLE
+
+It takes nearly 5 seconds to start. This is not too bad taking into
+consideration the number of packages, but this is still annoying while working.
+There are two schools to address this problem:
+
+- Run one emacs instance, do everything in it and never close it.
+- Run a daemon in the background, and open client frames when needed.
+
+I'm not really fond of having always an emacs instance that should never be
+closed. I'm still used to the vim's way of working with files, i.e. opening a
+new editor whenever I need to do something different. The second approach then fits
+well my workflow.
+
+* Running as a daemon
+The Emacs daemon can simply be started with =emacs --daemon=. This will setup
+Emacs, and when done the daemon will be forked into a background process. To
+open client frames on this daemon there is an =emacsclient= executable taking
+some arguments, like =-c= to ask it to create a new GUI frame. Note that =-t=
+may be used to create a new frame within a terminal.
+
+You can test running emacs as a daemon right away with these commands:
+
+#+BEGIN_SRC sh
+$ emacs --daemon
+$ emacsclient -c
+#+END_SRC
+
+This should open instantaneously an Emacs frame. You can then close the newly
+created /frame/ by pressing ~SPC q z~. You can also try to open several frames
+in parallel by running several more time =emacsclient -c=. It is possible to
+kill the /server/ by pressing ~SPC q q~.
+
+All the Emacs runtime is shared between clients as they are on the same Emacs
+instance. This mean you can access any /buffer/ or /layout/ from any client. You
+can try this by opening a file in a first client, then pressing ~SPC b b~ in a
+second: you will see the buffer opened on the first client.
+
+* Using a service
+
+Starting the daemon is a repetitive and boring task that can be automated at
+boot/login time. In Linux distributions using it, =systemd= can be used to setup
+user services. User services are conceptually the same as system services, the
+only difference is that they are at the user level and thus placed on the home
+folder. This characteristic allows to easily add user services to some
+version-control tool and share the configuration among several machines. The
+format of user services is the same as system services. On Archlinux, user
+service should be placed in =~/.local/share/systemd/user/= and ends with
+=.service=.
+
+For running emacs as a daemon, the service file is pretty simple:
+
+#+BEGIN_SRC systemd
+[Unit]
+Description=Emacs: the extensible, self-documenting text editor
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/emacs --daemon
+ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+Restart=always
+Environment="DISPLAY=:0" "SSH_AUTH_SOCK=/home/fabien/.gnupg/S.gpg-agent.ssh"
+
+[Install]
+WantedBy=default.target
+#+END_SRC
+
+This can be placed in =~/.local/share/systemd/user/emacs.service=. It can be
+enabled at user login time with:
+
+#+BEGIN_SRC sh
+$ systemctl --user enable emacs
+#+END_SRC
+
+And it can be started right away with:
+
+#+BEGIN_SRC sh
+$ systemctl --user start emacs
+#+END_SRC
+
+Stopping it and disabling it from user login time is as easy as:
+#+BEGIN_SRC sh
+$ systemctl --user stop emacs
+$ systemctl --user disable emacs
+#+END_SRC
+
+/Note:/ For an unknown reason this is not working right away on my computer:
+
+#+BEGIN_EXAMPLE
+Failed to connect to bus: No such file or directory
+#+END_EXAMPLE
+
+I solved this by adding =XDG_RUNTIME_DIR=/run/user/$UID= in front of commands,
+using an alias to make it simpler:
+
+#+BEGIN_SRC sh
+$ alias scu="XDG_RUNTIME_DIR=/run/user/$UID systemctl --user"
+$ scu enable emacs
+$ scu start emacs
+$ scu stop emacs
+$ scu disable emacs
+#+END_SRC
+
+* Extra: using WIN + s to start new clients in i3
+
+If like me you are using the =i3= window manager, you can bind =emacsclient -c=
+to a key in order to start Spacemacs even more quickly in all situations,
+without having to start a terminal first to enter the command. For instance you
+can bind it to ~WIN + s~ by adding the following line in your =~/.i3/config=
+file:
+
+#+BEGIN_SRC conf
+bindsym $win+e exec "emacsclient -c"
+#+END_SRC
