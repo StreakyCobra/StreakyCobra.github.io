@@ -1146,7 +1146,7 @@ BIOGRAPHY = """
 <img class="img-circle" style="float:left;margin:10px 20px 10px 0px;max-height:200px;" src="/images/StreakyCobra.png">
 <p><u>Developer, Hacker &amp; Computer Scientist</u></p>
 
-<p>I am currently employed as PhD student at the <a href="http://hevs.ch/">HES-SO Valais//Wallis</a> in Switzerland, working on Machine Learning applied to eHealth. I have created <a href="https://github.com/StreakyCobra/gws">gws</a> and I am also collaborating on <a href="https://github.com/syl20bnr/spacemacs">Spacemacs</a>. My interests are <i>Software development</i>, <i>Computer Science</i>, <i>open-source movement</i> and <i>DIY</i>.</p>
+<p>I am currently employed as a gPhD student at the <a href="http://hevs.ch/">HES-SO Valais//Wallis</a> in Switzerland, working on Machine Learning techniques applied to eHealth. I am the author of <a href="https://github.com/StreakyCobra/gws">gws</a> and I have co-founded the <a href="http://fablab-sion.ch">FabLab Sion</a>. My interests are <i>Software development</i>, <i>Computer Science</i>, the <i>open-source movement</i> and the <i>DIY</i> trend.</p>
 
 <p><a href="https://github.com/syl20bnr/spacemacs"><img src="https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg" /></a></p>
 """
