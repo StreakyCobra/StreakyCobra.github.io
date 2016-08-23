@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Why doing it the simple way? (spacemacs)</title><link>https://StreakyCobra.github.io/</link><description></description><atom:link href="https://StreakyCobra.github.io/categories/spacemacs.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 08 Feb 2016 12:49:54 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>SAAS or Spacemacs as a service</title><link>https://StreakyCobra.github.io/posts/saas-or-spacemacs-as-a-service/</link><dc:creator>Fabien Dubosson</dc:creator><description>&lt;div id="outline-container-sec-1" class="outline-2"&gt;
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0"><channel><title>Why doing it the simple way? (spacemacs)</title><link>https://StreakyCobra.github.io/</link><description></description><atom:link href="https://StreakyCobra.github.io/categories/spacemacs.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Tue, 23 Aug 2016 12:01:04 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>SAAS or Spacemacs as a service</title><link>https://StreakyCobra.github.io/posts/saas-or-spacemacs-as-a-service/</link><dc:creator>Fabien Dubosson</dc:creator><description>&lt;div id="outline-container-sec-1" class="outline-2"&gt;
 &lt;h2 id="sec-1"&gt;Introduction&lt;/h2&gt;
 &lt;div class="outline-text-2" id="text-1"&gt;
 &lt;p&gt;
@@ -59,7 +59,7 @@ may be used to create a new frame within a terminal.
 You can test running emacs as a daemon right away with these commands:
 &lt;/p&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;$ emacs --daemon
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ emacs --daemon
 $ emacsclient -c
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -98,7 +98,7 @@ service should be placed in &lt;code&gt;~/.local/share/systemd/user/&lt;/code&gt
 For running emacs as a daemon, the service file is pretty simple:
 &lt;/p&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;[Unit]
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[Unit]
 Description=Emacs: the extensible, self-documenting text editor
 
 [Service]
@@ -117,20 +117,20 @@ This can be placed in &lt;code&gt;~/.local/share/systemd/user/emacs.service&lt;/
 enabled at user login time with:
 &lt;/p&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;$ systemctl --user &lt;span class="nb"&gt;enable&lt;/span&gt; emacs
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ systemctl --user &lt;span class="nb"&gt;enable&lt;/span&gt; emacs
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
 And it can be started right away with:
 &lt;/p&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;$ systemctl --user start emacs
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ systemctl --user start emacs
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;
 Stopping it and disabling it from user login time is as easy as:
 &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;$ systemctl --user stop emacs
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ systemctl --user stop emacs
 $ systemctl --user disable emacs
 &lt;/pre&gt;&lt;/div&gt;
 
@@ -147,7 +147,7 @@ I solved this by adding &lt;code&gt;XDG_RUNTIME_DIR=/run/user/$UID&lt;/code&gt; 
 using an alias to make it simpler:
 &lt;/p&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;$ &lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="nv"&gt;scu&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"XDG_RUNTIME_DIR=/run/user/&lt;/span&gt;$&lt;span class="s2"&gt;UID systemctl --user"&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;alias&lt;/span&gt; &lt;span class="nv"&gt;scu&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;"XDG_RUNTIME_DIR=/run/user/&lt;/span&gt;&lt;span class="nv"&gt;$UID&lt;/span&gt;&lt;span class="s2"&gt; systemctl --user"&lt;/span&gt;
 $ scu &lt;span class="nb"&gt;enable&lt;/span&gt; emacs
 $ scu start emacs
 $ scu stop emacs
@@ -167,7 +167,7 @@ can bind it to &lt;code&gt;WIN + s&lt;/code&gt; by adding the following line in 
 file:
 &lt;/p&gt;
 
-&lt;div class="highlight"&gt;&lt;pre&gt;bindsym $win+e exec "emacsclient -c"
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;bindsym $win+e exec "emacsclient -c"
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;</description><category>emacs</category><category>spacemacs</category><guid>https://StreakyCobra.github.io/posts/saas-or-spacemacs-as-a-service/</guid><pubDate>Mon, 08 Feb 2016 11:11:53 GMT</pubDate></item></channel></rss>

@@ -116,7 +116,7 @@ may be used to create a new frame within a terminal.
 You can test running emacs as a daemon right away with these commands:
 </p>
 
-<div class="highlight"><pre>$ emacs --daemon
+<div class="highlight"><pre><span></span>$ emacs --daemon
 $ emacsclient -c
 </pre></div>
 
@@ -155,7 +155,7 @@ service should be placed in <code>~/.local/share/systemd/user/</code> and ends w
 For running emacs as a daemon, the service file is pretty simple:
 </p>
 
-<div class="highlight"><pre>[Unit]
+<div class="highlight"><pre><span></span>[Unit]
 Description=Emacs: the extensible, self-documenting text editor
 
 [Service]
@@ -174,20 +174,20 @@ This can be placed in <code>~/.local/share/systemd/user/emacs.service</code>. It
 enabled at user login time with:
 </p>
 
-<div class="highlight"><pre>$ systemctl --user <span class="nb">enable</span> emacs
+<div class="highlight"><pre><span></span>$ systemctl --user <span class="nb">enable</span> emacs
 </pre></div>
 
 <p>
 And it can be started right away with:
 </p>
 
-<div class="highlight"><pre>$ systemctl --user start emacs
+<div class="highlight"><pre><span></span>$ systemctl --user start emacs
 </pre></div>
 
 <p>
 Stopping it and disabling it from user login time is as easy as:
 </p>
-<div class="highlight"><pre>$ systemctl --user stop emacs
+<div class="highlight"><pre><span></span>$ systemctl --user stop emacs
 $ systemctl --user disable emacs
 </pre></div>
 
@@ -204,7 +204,7 @@ I solved this by adding <code>XDG_RUNTIME_DIR=/run/user/$UID</code> in front of 
 using an alias to make it simpler:
 </p>
 
-<div class="highlight"><pre>$ <span class="nb">alias</span> <span class="nv">scu</span><span class="o">=</span><span class="s2">"XDG_RUNTIME_DIR=/run/user/</span>$<span class="s2">UID systemctl --user"</span>
+<div class="highlight"><pre><span></span>$ <span class="nb">alias</span> <span class="nv">scu</span><span class="o">=</span><span class="s2">"XDG_RUNTIME_DIR=/run/user/</span><span class="nv">$UID</span><span class="s2"> systemctl --user"</span>
 $ scu <span class="nb">enable</span> emacs
 $ scu start emacs
 $ scu stop emacs
@@ -224,7 +224,7 @@ can bind it to <code>WIN + s</code> by adding the following line in your <code>~
 file:
 </p>
 
-<div class="highlight"><pre>bindsym $win+e exec "emacsclient -c"
+<div class="highlight"><pre><span></span>bindsym $win+e exec "emacsclient -c"
 </pre></div>
 </div>
 </div>
@@ -332,7 +332,7 @@ license: we want the repository to be empty. Once the repository has been
 created, you can clone it on your computer with:
 </p>
 
-<div class="highlight"><pre>$ git clone git@github.com:&lt;username&gt;.github.io.git ~/blog
+<div class="highlight"><pre><span></span>$ git clone git@github.com:&lt;username&gt;.github.io.git ~/blog
 </pre></div>
 
 <p>
@@ -340,7 +340,7 @@ As the <code>master</code> branch will be used for the rendered website, let us 
 branch called <code>sources</code> to put the… sources of your blog:
 </p>
 
-<div class="highlight"><pre>$ <span class="nb">cd</span> ~/blog
+<div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ~/blog
 $ git checkout -b sources
 </pre></div>
 
@@ -348,7 +348,7 @@ $ git checkout -b sources
 You can already add a <code>.gitignore</code> to the folder:
 </p>
 
-<div class="highlight"><pre>*.py[cod]
+<div class="highlight"><pre><span></span>*.py[cod]
 __pycache__
 cache
 output
@@ -360,7 +360,7 @@ _env/
 and commit it (be sure to be on the <code>sources</code> branch):
 </p>
 
-<div class="highlight"><pre>$ git add .gitignore
+<div class="highlight"><pre><span></span>$ git add .gitignore
 $ git commit -m <span class="s2">"Add .gitignore"</span>
 </pre></div>
 
@@ -412,7 +412,7 @@ will do the most of the job.
 Let us start by defining a variable for the name of the environment folder:
 </p>
 
-<div class="highlight"><pre><span class="nv">ENVIRONMENT</span> <span class="o">:=</span> _env/
+<div class="highlight"><pre><span></span><span class="nv">ENVIRONMENT</span> <span class="o">:=</span> _env/
 </pre></div>
 
 <p>
@@ -421,14 +421,14 @@ be called when no target is specified. It is a good practice from my point of
 view, as it uncouples the logic from the target ordering.
 </p>
 
-<div class="highlight"><pre><span class="nf">default</span><span class="o">:</span> <span class="n">help</span>
+<div class="highlight"><pre><span></span><span class="nf">default</span><span class="o">:</span> <span class="n">help</span>
 </pre></div>
 
 <p>
 Then a target to create and clean the environment:
 </p>
 
-<div class="highlight"><pre><span class="nf">$(ENVIRONMENT)</span><span class="o">:</span>
+<div class="highlight"><pre><span></span><span class="nf">$(ENVIRONMENT)</span><span class="o">:</span>
   pyvenv <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span>
 
 <span class="nf">clean</span><span class="o">:</span>
@@ -442,7 +442,7 @@ that is a special variable that as for value the target's name. So it translates
 to:
 </p>
 
-<div class="highlight"><pre><span class="nf">_env/</span><span class="o">:</span>
+<div class="highlight"><pre><span></span><span class="nf">_env/</span><span class="o">:</span>
   pyvenv <span class="s2">"_env/"</span>
 
 <span class="nf">clean</span><span class="o">:</span>
@@ -457,7 +457,7 @@ activated, the user need to install Nikola. To make this simpler for the user, I
 have done a <code>setup</code> target printing all required commands:
 </p>
 
-<div class="highlight"><pre><span class="nf">setup</span><span class="o">:</span>
+<div class="highlight"><pre><span></span><span class="nf">setup</span><span class="o">:</span>
   @echo <span class="s2">"make </span><span class="k">$(</span>ENVIRONMENT<span class="k">)</span><span class="s2">;"</span>
   @echo <span class="s2">"source </span><span class="k">$(</span>ENVIRONMENT<span class="k">)</span><span class="s2">bin/activate;"</span>
   @echo <span class="s2">"pip install --upgrade pip 'Nikola[extras]';"</span>
@@ -490,7 +490,7 @@ Instead of asking the user to copy/paste this in their terminal, it is possible
 to evaluate it directly with:
 </p>
 
-<div class="highlight"><pre>$ <span class="nb">eval</span> <span class="k">$(</span>make setup<span class="k">)</span>
+<div class="highlight"><pre><span></span>$ <span class="nb">eval</span> <span class="k">$(</span>make setup<span class="k">)</span>
 </pre></div>
 
 <p>
@@ -498,7 +498,7 @@ This will do all the work, but let us add an <code>help</code> target that expla
 literally to the user:
 </p>
 
-<div class="highlight"><pre><span class="nf">help</span><span class="o">:</span>
+<div class="highlight"><pre><span></span><span class="nf">help</span><span class="o">:</span>
   @echo <span class="s2">"To setup Nikola environment, please use 'eval \$</span><span class="k">$(</span>make setup<span class="k">)</span><span class="s2">'."</span>
 </pre></div>
 
@@ -506,7 +506,7 @@ literally to the user:
 You can now initialize the environment and install Nikola with:
 </p>
 
-<div class="highlight"><pre>$ <span class="nb">eval</span> <span class="k">$(</span>make setup<span class="k">)</span>
+<div class="highlight"><pre><span></span>$ <span class="nb">eval</span> <span class="k">$(</span>make setup<span class="k">)</span>
 </pre></div>
 
 <p>
@@ -525,7 +525,7 @@ The skeleton of the website can be created with these commands. Note you will
 have to give some information to create the site:
 </p>
 
-<div class="highlight"><pre>$ nikola init my_first_site
+<div class="highlight"><pre><span></span>$ nikola init my_first_site
 <span class="c1"># Fill the asked information</span>
 $ mv my_first_site/* .
 $ rm -r my_first_site
@@ -543,7 +543,7 @@ You can now commit the <code>Makefile</code> and the <code>conf.py</code> files 
 branch (if not already done):
 </p>
 
-<div class="highlight"><pre>$ git add Makefile conf.py
+<div class="highlight"><pre><span></span>$ git add Makefile conf.py
 $ git commit -m <span class="s2">"Add Makefile and conf.py"</span>
 </pre></div>
 </div>
@@ -557,7 +557,7 @@ Here comes the interesting parts: making Nikola play with org-mode! There is an
 "official" <a href="https://plugins.getnikola.com/#orgmode">Nikola's plugin</a> for this, so is quite simple to install:
 </p>
 
-<div class="highlight"><pre>$ nikola plugin -i orgmode
+<div class="highlight"><pre><span></span>$ nikola plugin -i orgmode
 </pre></div>
 
 <p>
@@ -569,7 +569,7 @@ You will also have to edit the <code>conf.py</code> file so that Nikola will rec
 <code>org</code> files. For this, edit the file and add the following lines:
 </p>
 
-<div class="highlight"><pre><span class="c1"># Add the orgmode compiler to your COMPILERS dict.</span>
+<div class="highlight"><pre><span></span><span class="c1"># Add the orgmode compiler to your COMPILERS dict.</span>
 <span class="n">COMPILERS</span><span class="p">[</span><span class="s2">"orgmode"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="s1">'.org'</span><span class="p">,)</span>
 
 <span class="c1"># Add org files to your POSTS, PAGES</span>
@@ -581,7 +581,7 @@ You will also have to edit the <code>conf.py</code> file so that Nikola will rec
 You can commit the added files:
 </p>
 
-<div class="highlight"><pre>$ git add plugins/orgmode conf.py
+<div class="highlight"><pre><span></span>$ git add plugins/orgmode conf.py
 $ git commit -m <span class="s2">"Add org-mode support"</span>
 </pre></div>
 </div>
@@ -595,7 +595,7 @@ $ git commit -m <span class="s2">"Add org-mode support"</span>
 Everything should be set up now. In order to test it, you can use the following commands:
 </p>
 
-<div class="highlight"><pre>$ nikola build
+<div class="highlight"><pre><span></span>$ nikola build
 $ nikola serve
 </pre></div>
 
@@ -622,7 +622,7 @@ Now that the system is set up correctly, let's start blogging.
 To write a new post, simply use the following command:
 </p>
 
-<div class="highlight"><pre>$ nikola new_post -e -f orgmode
+<div class="highlight"><pre><span></span>$ nikola new_post -e -f orgmode
 </pre></div>
 
 <p>
@@ -641,7 +641,7 @@ As we already saw previously, the site can be built and tested with the
 following commands:
 </p>
 
-<div class="highlight"><pre>$ nikola build
+<div class="highlight"><pre><span></span>$ nikola build
 $ nikola serve
 </pre></div>
 
@@ -653,7 +653,7 @@ can be used advantageously as it will detect changes and rebuild the site
 automatically:
 </p>
 
-<div class="highlight"><pre>$ nikola auto
+<div class="highlight"><pre><span></span>$ nikola auto
 </pre></div>
 </div>
 </div>
@@ -666,7 +666,7 @@ In order to deploy on GitHub easily, only one simple step has to be done: edit
 the <code>conf.py</code> file and change these variables as in this snippet:
 </p>
 
-<div class="highlight"><pre><span class="n">GITHUB_SOURCE_BRANCH</span> <span class="o">=</span> <span class="s1">'sources'</span>
+<div class="highlight"><pre><span></span><span class="n">GITHUB_SOURCE_BRANCH</span> <span class="o">=</span> <span class="s1">'sources'</span>
 <span class="n">GITHUB_DEPLOY_BRANCH</span> <span class="o">=</span> <span class="s1">'master'</span>
 </pre></div>
 
@@ -674,7 +674,7 @@ the <code>conf.py</code> file and change these variables as in this snippet:
 It is all. Now you can deploy your website on GitHub by simply calling:
 </p>
 
-<div class="highlight"><pre>$ nikola github_deploy
+<div class="highlight"><pre><span></span>$ nikola github_deploy
 </pre></div>
 
 <p>
@@ -696,7 +696,7 @@ It is possible to extract the metadata out of the posts files. For this simply
 change this variable in the <code>conf.py</code> file:
 </p>
 
-<div class="highlight"><pre><span class="n">ONE_FILE_POSTS</span> <span class="o">=</span> <span class="bp">False</span>
+<div class="highlight"><pre><span></span><span class="n">ONE_FILE_POSTS</span> <span class="o">=</span> <span class="bp">False</span>
 </pre></div>
 </div>
 </div>
@@ -709,14 +709,14 @@ The theme of the website can be changed easily. Nikola provides some
 <a href="https://themes.getnikola.com/">predefined themes</a> that you can easily use. For this use the following command:
 </p>
 
-<div class="highlight"><pre>$ nikola install_theme &lt;theme_name&gt;
+<div class="highlight"><pre><span></span>$ nikola install_theme &lt;theme_name&gt;
 </pre></div>
 
 <p>
 And change the following variable in the `conf.py` file:
 </p>
 
-<div class="highlight"><pre><span class="n">THEME</span> <span class="o">=</span> <span class="s2">"&lt;theme_name&gt;"</span>
+<div class="highlight"><pre><span></span><span class="n">THEME</span> <span class="o">=</span> <span class="s2">"&lt;theme_name&gt;"</span>
 </pre></div>
 
 <p>
@@ -740,7 +740,7 @@ You need to generate a custom <code>css</code> file in order to make the colorat
 displayed on the <code>html</code> page. For this run the following commands:
 </p>
 
-<div class="highlight"><pre>$ mkdir -p files/assets/css/
+<div class="highlight"><pre><span></span>$ mkdir -p files/assets/css/
 $ pygmentize -S friendly -a .highlight -f html &gt;&gt; files/assets/css/custom.css
 </pre></div>
 
@@ -748,7 +748,7 @@ $ pygmentize -S friendly -a .highlight -f html &gt;&gt; files/assets/css/custom.
 Then rebuild the website: the source codes should be highlighted now!
 </p>
 
-<div class="highlight"><pre>$ nikola build
+<div class="highlight"><pre><span></span>$ nikola build
 $ nikola serve
 </pre></div>
 </div>
@@ -802,7 +802,7 @@ Markdown, RestructuredText, and many other format is a nice to have.
                     
 <img class="img-circle" style="float:left;margin:10px 20px 10px 0px;max-height:200px;" src="images/StreakyCobra.png"><p><u>Developer, Hacker &amp; Computer Scientist</u></p>
 
-<p>I am currently employed as PhD student at the <a href="http://hevs.ch/">HES-SO Valais//Wallis</a> in Switzerland, working on Machine Learning applied to eHealth. I have created <a href="https://github.com/StreakyCobra/gws">gws</a> and I am also collaborating on <a href="https://github.com/syl20bnr/spacemacs">Spacemacs</a>. My interests are <i>Software development</i>, <i>Computer Science</i>, <i>open-source movement</i> and <i>DIY</i>.</p>
+<p>I am currently employed as a gPhD student at the <a href="http://hevs.ch/">HES-SO Valais//Wallis</a> in Switzerland, working on Machine Learning techniques applied to eHealth. I am the author of <a href="https://github.com/StreakyCobra/gws">gws</a> and I have co-founded the <a href="http://fablab-sion.ch">FabLab Sion</a>. My interests are <i>Software development</i>, <i>Computer Science</i>, the <i>open-source movement</i> and the <i>DIY</i> trend.</p>
 
 <p><a href="https://github.com/syl20bnr/spacemacs"><img src="https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg"></a></p>
 
@@ -828,20 +828,20 @@ Markdown, RestructuredText, and many other format is a nice to have.
             <script src="assets/js/all-nocdn.js"></script><script>
                 var links = [
                         {
-                            "icon": "<i class='fa fa-share-square'></i>",    
                             "bgcolor": "#F44336",    
+                            "icon": "<i class='fa fa-share-square'></i>",    
                         },
                         {
+                            "bgcolor": "#666666",    
                             "icon": "<i class='fa fa-github-square'></i>",    
                             "url": "https://github.com/StreakyCobra",    
                             "color": "#fffff",    
-                            "bgcolor": "#666666",    
                         },
                         {
+                            "bgcolor": "#3B5998",    
                             "icon": "<i class='fa fa-linkedin-square'></i>",    
                             "url": "https://www.linkedin.com/in/fabiendubosson",    
                             "color": "#fffff",    
-                            "bgcolor": "#3B5998",    
                         },
                 ];
 

@@ -133,7 +133,7 @@ may be used to create a new frame within a terminal.
 You can test running emacs as a daemon right away with these commands:
 </p>
 
-<div class="highlight"><pre>$ emacs --daemon
+<div class="highlight"><pre><span></span>$ emacs --daemon
 $ emacsclient -c
 </pre></div>
 
@@ -172,7 +172,7 @@ service should be placed in <code>~/.local/share/systemd/user/</code> and ends w
 For running emacs as a daemon, the service file is pretty simple:
 </p>
 
-<div class="highlight"><pre>[Unit]
+<div class="highlight"><pre><span></span>[Unit]
 Description=Emacs: the extensible, self-documenting text editor
 
 [Service]
@@ -191,20 +191,20 @@ This can be placed in <code>~/.local/share/systemd/user/emacs.service</code>. It
 enabled at user login time with:
 </p>
 
-<div class="highlight"><pre>$ systemctl --user <span class="nb">enable</span> emacs
+<div class="highlight"><pre><span></span>$ systemctl --user <span class="nb">enable</span> emacs
 </pre></div>
 
 <p>
 And it can be started right away with:
 </p>
 
-<div class="highlight"><pre>$ systemctl --user start emacs
+<div class="highlight"><pre><span></span>$ systemctl --user start emacs
 </pre></div>
 
 <p>
 Stopping it and disabling it from user login time is as easy as:
 </p>
-<div class="highlight"><pre>$ systemctl --user stop emacs
+<div class="highlight"><pre><span></span>$ systemctl --user stop emacs
 $ systemctl --user disable emacs
 </pre></div>
 
@@ -221,7 +221,7 @@ I solved this by adding <code>XDG_RUNTIME_DIR=/run/user/$UID</code> in front of 
 using an alias to make it simpler:
 </p>
 
-<div class="highlight"><pre>$ <span class="nb">alias</span> <span class="nv">scu</span><span class="o">=</span><span class="s2">"XDG_RUNTIME_DIR=/run/user/</span>$<span class="s2">UID systemctl --user"</span>
+<div class="highlight"><pre><span></span>$ <span class="nb">alias</span> <span class="nv">scu</span><span class="o">=</span><span class="s2">"XDG_RUNTIME_DIR=/run/user/</span><span class="nv">$UID</span><span class="s2"> systemctl --user"</span>
 $ scu <span class="nb">enable</span> emacs
 $ scu start emacs
 $ scu stop emacs
@@ -241,7 +241,7 @@ can bind it to <code>WIN + s</code> by adding the following line in your <code>~
 file:
 </p>
 
-<div class="highlight"><pre>bindsym $win+e exec "emacsclient -c"
+<div class="highlight"><pre><span></span>bindsym $win+e exec "emacsclient -c"
 </pre></div>
 </div>
 </div>
@@ -272,7 +272,7 @@ file:
                     
 <img class="img-circle" style="float:left;margin:10px 20px 10px 0px;max-height:200px;" src="../../images/StreakyCobra.png"><p><u>Developer, Hacker &amp; Computer Scientist</u></p>
 
-<p>I am currently employed as PhD student at the <a href="http://hevs.ch/">HES-SO Valais//Wallis</a> in Switzerland, working on Machine Learning applied to eHealth. I have created <a href="https://github.com/StreakyCobra/gws">gws</a> and I am also collaborating on <a href="https://github.com/syl20bnr/spacemacs">Spacemacs</a>. My interests are <i>Software development</i>, <i>Computer Science</i>, <i>open-source movement</i> and <i>DIY</i>.</p>
+<p>I am currently employed as a gPhD student at the <a href="http://hevs.ch/">HES-SO Valais//Wallis</a> in Switzerland, working on Machine Learning techniques applied to eHealth. I am the author of <a href="https://github.com/StreakyCobra/gws">gws</a> and I have co-founded the <a href="http://fablab-sion.ch">FabLab Sion</a>. My interests are <i>Software development</i>, <i>Computer Science</i>, the <i>open-source movement</i> and the <i>DIY</i> trend.</p>
 
 <p><a href="https://github.com/syl20bnr/spacemacs"><img src="https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg"></a></p>
 
@@ -302,20 +302,20 @@ file:
             <script src="../../assets/js/all-nocdn.js"></script><script>
                 var links = [
                         {
-                            "icon": "<i class='fa fa-share-square'></i>",    
                             "bgcolor": "#F44336",    
+                            "icon": "<i class='fa fa-share-square'></i>",    
                         },
                         {
+                            "bgcolor": "#666666",    
                             "icon": "<i class='fa fa-github-square'></i>",    
                             "url": "https://github.com/StreakyCobra",    
                             "color": "#fffff",    
-                            "bgcolor": "#666666",    
                         },
                         {
+                            "bgcolor": "#3B5998",    
                             "icon": "<i class='fa fa-linkedin-square'></i>",    
                             "url": "https://www.linkedin.com/in/fabiendubosson",    
                             "color": "#fffff",    
-                            "bgcolor": "#3B5998",    
                         },
                 ];
 
